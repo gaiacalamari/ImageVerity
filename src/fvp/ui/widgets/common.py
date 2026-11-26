@@ -21,8 +21,8 @@ class Page(QWidget):
         self.state = state
         self.simple = bool(getattr(state.settings, "ui_simple", True))
         self.root = QVBoxLayout(self)
-        self.root.setContentsMargins(22, 16, 22, 16)
-        self.root.setSpacing(10)
+        self.root.setContentsMargins(28, 22, 28, 22)
+        self.root.setSpacing(12)
         head = QHBoxLayout()
         t = QLabel(self.title)
         t.setObjectName("PageTitle")
