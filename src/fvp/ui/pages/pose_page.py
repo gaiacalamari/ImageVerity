@@ -95,10 +95,10 @@ class PosePage(Page):
         state.show_map.connect(self._want_map)
 
     def apply_mode(self) -> None:
-        for w in self.expert_tabs:
-            self.tabs.setTabVisible(self.tabs.indexOf(w), not self.simple)
-        self.open_btn.setVisible(not self.simple)
-        self.src_row_extra(not self.simple)
+        for w in self.expert_tabs:                      # unica vista: tutte le schede restano raggiungibili
+            self.tabs.setTabVisible(self.tabs.indexOf(w), True)
+        self.open_btn.setVisible(True)
+        self.src_row_extra(False)
 
     def src_row_extra(self, on: bool) -> None:
         """Il selettore della fonte serve solo quando ci sono anche i risultati di Sports2D."""
@@ -261,7 +261,7 @@ class PosePage(Page):
             persons = [(f"P{p['track']}", exp[p["mot"]]["path"]) for p in pr.get("persons", [])
                        if p.get("mot") in exp]
             marks = [(e["time_s"], C["red"] if e["class"] == "scena" else C["orange"]) for e in pr.get("transitions", [])]
-            srcs[SRC_FVP] = {"label": "Forensic Vision Pro", "video": r.get("artifacts", {}).get("pose_video", ""),
+            srcs[SRC_FVP] = {"label": "ImageVerity", "video": r.get("artifacts", {}).get("pose_video", ""),
                              "persons": persons, "marks": marks}
         sp = r.get("sports2d")
         if sp and (sp.get("video") or sp.get("mot")):
@@ -282,7 +282,7 @@ class PosePage(Page):
         i = self.src.findData(cur)
         self.src.setCurrentIndex(i if i >= 0 else 0)
         self.src.blockSignals(False)
-        self.src_row_extra(not self.simple)
+        self.src_row_extra(False)
         if not srcs:
             self.player.load(None)
             self.person.clear()
@@ -356,7 +356,7 @@ class PosePage(Page):
         info = QLabel("Esegue Sports2D e Pose2Sim originali (David Pagnon, BSD-3-Clause) su una copia verificata del "
                       "reperto, in un ambiente Python separato. Video annotato, angoli (.mot) e traiettorie (.trc) "
                       "prodotti dai programmi originali si vedono nella scheda 'Video e angoli' scegliendo la fonte "
-                      "Sports2D, affiancati a quelli di Forensic Vision Pro. Ogni file è registrato con SHA-256.")
+                      "Sports2D, affiancati a quelli di ImageVerity. Ogni file è registrato con SHA-256.")
         info.setWordWrap(True)
         lay.addWidget(info)
         row = QHBoxLayout()

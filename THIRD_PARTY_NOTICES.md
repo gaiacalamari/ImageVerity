@@ -1,8 +1,8 @@
 # Crediti e licenze di terze parti
 
-Forensic Vision Pro esiste grazie al lavoro degli autori dei componenti elencati qui. Questo file è distribuito con
+ImageVerity esiste grazie al lavoro degli autori dei componenti elencati qui. Questo file è distribuito con
 il programma (accanto all'eseguibile e in Impostazioni → Crediti e licenze) ed è stampabile con
-`ForensicVisionPro --credits crediti.txt` oppure, dai sorgenti, `python -m fvp --credits`.
+`ImageVerity --credits crediti.txt` oppure, dai sorgenti, `python -m fvp --credits`.
 
 I testi integrali delle licenze sono nella cartella `licenses/`. Nella build Windows la cartella contiene anche i file
 di licenza estratti da ogni pacchetto installato, con l'indice `INDEX.md` generato da `tools/collect_licenses.py`.
@@ -31,7 +31,7 @@ di licenza estratti da ogni pacchetto installato, con l'indice `INDEX.md` genera
 | [FFmpeg / FFprobe](https://ffmpeg.org/) | FFmpeg developers; build Windows di Gyan Doshi (gyan.dev) | Lettura di stream, contenitori e tempi dei video | GPL-3.0 (build statica con `--enable-gpl --enable-version3`) |
 
 ExifTool e FFprobe sono eseguiti come programmi separati, senza shell e con timeout: non sono collegati al codice di
-Forensic Vision Pro.
+ImageVerity.
 
 ## Modelli (facoltativi)
 

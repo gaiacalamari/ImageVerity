@@ -222,14 +222,14 @@ def simple_ui(tmp_path, monkeypatch):
     w.close()
 
 
-def test_simple_view_is_default_and_minimal(simple_ui):
-    from fvp.core.config import Settings
-    from fvp.ui.main_window import SIMPLE_LABELS
+def test_single_view_menu(simple_ui):
+    from fvp.ui.main_window import LABELS, NAV, SECTIONS
     app, st, w = simple_ui
-    assert Settings().ui_simple and w.simple
-    assert set(w.items) == set(SIMPLE_LABELS)                       # solo i passi essenziali nel menu
+    assert w.simple and not hasattr(w, "mode_btn") and not hasattr(w, "toggle_mode")   # nessuna vista esperta
+    assert list(w.items) == NAV and set(NAV) == set(LABELS) == set(w.pages)            # ogni pagina è nel menu
+    assert [t for t, _ in SECTIONS][:3] == ["COME SI USA", "ANALISI", "STRUMENTI"]
+    assert {"Comparison Tool", "Hex Viewer", "File Integrity"} <= set(dict(SECTIONS)["STRUMENTI"])
     assert w.items["Case Management"].text().startswith("1")
-    assert w.mode_btn.text() == "Passa alla vista esperta" and not w.strict.isVisible()
     for name, pg in w.pages.items():                                 # guida completa nascosta, frase breve visibile
         assert not pg.help_box.isVisibleTo(pg)
         if pg.intro:
@@ -240,31 +240,26 @@ def test_simple_view_is_default_and_minimal(simple_ui):
         assert len(pg.lead) <= 140, name
     lp = w.pages["Carica e analizza"]
     assert not lp.adv.isVisibleTo(lp) and not lp.only_img.isVisibleTo(lp)
-    lp.adv_btn.setChecked(True)
-    assert lp.adv.isVisibleTo(lp)
+    lp.adv_btn.setChecked(True)                                     # opzioni tecniche a richiesta
+    assert lp.adv.isVisibleTo(lp) and lp.only_img.isVisibleTo(lp) and lp.recursive.isVisibleTo(lp)
     dp = w.pages["Dashboard"]
-    assert not dp.fv.isVisibleTo(dp) and not dp.activity_box.isVisibleTo(dp)
+    assert dp.title == "Risultati" and w.items["Dashboard"].text().endswith("Risultati")
+    assert dp.stack.currentIndex() == 0                              # nessun caso: solo l'invito a scegliere
 
 
-def test_simple_view_switch_and_hidden_pages(simple_ui, tmp_path):
+def test_all_pages_reachable_from_menu(simple_ui, tmp_path):
     app, st, w = simple_ui
     cp = w.pages["Case Management"]
     cp.cid.setText("S-1")
-    cp.ctitle.setText("semplice")
+    cp.ctitle.setText("vista unica")
     cp._create()
     app.processEvents()
     assert w.current_name() == "Carica e analizza"
-    w.go_to("Image Forensics")                      # non è nel menu semplice ma i pulsanti "Apri vista" la aprono
-    assert w.current_name() == "Image Forensics" and w.current_page() is w.pages["Image Forensics"]
-    w.toggle_mode()
-    assert not w.simple and "Image Forensics" in w.items and w.current_name() == "Image Forensics"
-    assert w.pages["Carica e analizza"].adv.isVisibleTo(w.pages["Carica e analizza"])
+    for name in ("Image Forensics", "Hex Viewer", "Comparison Tool", "File Integrity"):
+        w.nav.setCurrentItem(w.items[name])
+        assert w.current_name() == name and w.current_page() is w.pages[name]
     pp = w.pages["Human Pose"]
-    assert pp.tabs.isTabVisible(pp.tabs.indexOf(pp.engine))
-    w.toggle_mode()
-    assert w.simple and not pp.tabs.isTabVisible(pp.tabs.indexOf(pp.engine))
-    from fvp.core.config import Settings
-    assert Settings.load().ui_simple                # la scelta resta salvata
+    assert all(pp.tabs.isTabVisible(pp.tabs.indexOf(t)) for t in pp.expert_tabs)
 
 
 # ------------------------------------------------------------------ icona e riepilogo
@@ -290,7 +285,7 @@ def test_program_icon(ui):
     assert not w.windowIcon().isNull()
 
 
-def test_dashboard_details_on_the_right(ui, dataset):
+def test_dashboard_table_with_details_on_click(ui, dataset):
     import shutil
     app, st, w = ui
     cp = w.pages["Case Management"]
@@ -305,18 +300,29 @@ def test_dashboard_details_on_the_right(ui, dataset):
     st.set_exhibit(ex.id)
     st.analysis_changed.emit()
     dp = w.pages["Dashboard"]
-    dp.set_simple(True)
     dp.refresh()
-    assert not dp.fv.isVisibleTo(dp)                              # elenco chiuso…
-    assert dp.fv.detail.isVisibleTo(dp)                           # …ma i dettagli sono a destra
-    assert dp.fv.detail.parent() is not dp.fv                     # non sotto la tabella
+    assert dp.files.topLevelItemCount() == 1                       # elenco dei file, una frase di esito
+    it = dp.files.topLevelItem(0)
     from fvp.core import explain
-    first = explain.attention(st.last_analysis()["findings"])[0]
-    assert first.title in dp.fv.detail.toPlainText()             # primo punto da verificare già aperto
-    f = next(x for x in dp.fv.findings if x.level.value == "informativo")
-    dp.fv.select(f.id)
-    assert f.title in dp.fv.detail.toPlainText()
-
+    att = explain.attention(st.last_analysis()["findings"])
+    assert it.text(0) == ex.original_name and it.text(1).endswith("da controllare")
+    assert "hanno qualcosa da controllare" in dp.summary.text()
+    assert dp.stack.currentIndex() == 1                            # il file è già aperto a destra
+    text = dp.points.toPlainText()
+    assert att[0].title in text and explain.plain_explanation(att[0]) in text
+    dp.show_finding(att[0].id)                                     # clic su un punto: la sua scheda
+    assert dp.stack.currentIndex() == 2 and "Cosa significa" in dp.detail.toPlainText()
+    assert "Dati tecnici" not in dp.detail.toPlainText()          # dati tecnici a richiesta
+    dp.tech_btn.setChecked(True)
+    assert "Metodo" in dp.detail.toPlainText()
+    dp.back()
+    assert dp.stack.currentIndex() == 1
+    f = next(x for x in st.last_analysis()["findings"] if x.level.value == "informativo")
+    assert f.title not in dp.points.toPlainText()
+    dp.show_all.setChecked(True)                                   # anche i controlli senza esito
+    assert f.title in dp.points.toPlainText()
+    dp.select_finding(f.id, ex.id)
+    assert f.title in dp.detail.toPlainText()
 
 def test_pages_scroll_instead_of_overlapping(simple_ui, dataset, tmp_path):
     """Con la finestra piccola (portatile, Windows al 150%) le pagine scorrono: nessun widget viene compresso sotto
@@ -337,16 +343,14 @@ def test_pages_scroll_instead_of_overlapping(simple_ui, dataset, tmp_path):
                     ["integrity"] + PRESETS["Completa senza stima della posa (più rapida)"])
     st.set_exhibit(ex.id)
     st.analysis_changed.emit()
-    for simple in (True, False):
-        for name in NAV:
-            w.go_to(name)
-            for _ in range(5):
-                app.processEvents()
-            pg, m = w.pages[name], w.pages[name].minimumSizeHint()
-            assert w.scrolls[name].widget() is pg
-            assert pg.height() >= m.height() - 1 and pg.width() >= m.width() - 1, (name, pg.size(), m)
-        w.toggle_mode()
-    # "Apri vista" da Leggi i risultati porta alla pagina giusta anche se non è nel menu della vista semplice
+    for name in NAV:
+        w.go_to(name)
+        for _ in range(5):
+            app.processEvents()
+        pg, m = w.pages[name], w.pages[name].minimumSizeHint()
+        assert w.scrolls[name].widget() is pg
+        assert pg.height() >= m.height() - 1 and pg.width() >= m.width() - 1, (name, pg.size(), m)
+    # "Apri vista" da Leggi i risultati porta alla pagina giusta
     f = explain.attention(st.last_analysis()["findings"])[0]
     w.go_to("Dashboard")
     w.pages["Dashboard"]._open(explain.related_page(f), explain.related_map(f) or "")

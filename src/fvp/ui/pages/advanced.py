@@ -7,11 +7,11 @@ from pathlib import Path
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage, QPixmap
-from PySide6.QtWidgets import (QComboBox, QFileDialog, QFormLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit,
-                               QPushButton, QSpinBox, QSplitter, QTabWidget, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QComboBox, QFileDialog, QHBoxLayout, QLabel, QPushButton, QSpinBox, QSplitter,
+                               QTabWidget, QVBoxLayout, QWidget)
 
 from ...core.findings import Category
-from ...engines import compare, prnu, stegointel
+from ...engines import compare, stegointel
 from ..widgets.common import link_findings, Page, fill_table, make_table
 from ..widgets.findings_view import FindingsView
 from ..widgets.imageviews import SyncGroup
@@ -111,7 +111,7 @@ class SteganalysisPage(Page):
         # riferimenti
         w4 = QWidget()
         l4 = QVBoxLayout(w4)
-        ref = make_table(["Strumento citato da StegoIntelligence", "Tecnica", "In Forensic Vision Pro"])
+        ref = make_table(["Strumento citato da StegoIntelligence", "Tecnica", "In ImageVerity"])
         fill_table(ref, [list(t) for t in STEGO_TOOLS], sortable=False)
         ref.setWordWrap(True)
         l4.addWidget(ref, 1)
@@ -194,103 +194,6 @@ class SteganalysisPage(Page):
         rows = self.hits.selectionModel().selectedRows()
         if rows and rows[0].row() < len(self._hits):
             self.state.open_hex.emit(self._hits[rows[0].row()]["file"])
-
-
-class PrnuPage(Page):
-    title = "Fotocamera di origine"
-    lead = "Verifica se una foto è stata scattata da una certa fotocamera."
-    intro = ("Il PRNU è un rumore caratteristico di ogni sensore. Con almeno 5 immagini di riferimento dello stesso "
-             "dispositivo (meglio 20 o più, di scene luminose e uniformi, non ridimensionate) si costruisce "
-             "un'impronta; un'immagine con PCE superiore a 60 è compatibile con quel sensore. Le impronte valgono per "
-             "tutti i casi e ogni confronto è registrato nel caso aperto.")
-
-    def __init__(self, state):
-        super().__init__(state)
-        g = QGroupBox("Nuova impronta")
-        f = QFormLayout(g)
-        self.label, self.model = QLineEdit(), QLineEdit()
-        self.label.setPlaceholderText("es. Smartphone sequestrato reperto 3")
-        self.model.setPlaceholderText("es. Samsung SM-S918B")
-        f.addRow("Etichetta", self.label)
-        f.addRow("Modello dichiarato", self.model)
-        b = QPushButton("Scegli immagini di riferimento e crea impronta…")
-        b.clicked.connect(self._add)
-        f.addRow(b)
-        self.root.addWidget(g)
-        row = QHBoxLayout()
-        bm = QPushButton("Confronta il reperto selezionato con tutte le impronte")
-        bm.setObjectName("Primary")
-        bm.clicked.connect(self._match)
-        bd = QPushButton("Elimina impronta selezionata")
-        bd.clicked.connect(self._delete)
-        row.addWidget(bm)
-        row.addWidget(bd)
-        row.addStretch(1)
-        self.root.addLayout(row)
-        sp = QSplitter(Qt.Orientation.Vertical)
-        self.table = make_table(["ID", "Etichetta", "Modello", "Riferimenti", "Ritaglio", "Creata (UTC)", "Operatore"])
-        sp.addWidget(self.table)
-        self.res = make_table(["Impronta", "PCE", "Esito", "Nota"])
-        sp.addWidget(self.res)
-        self.fv = FindingsView({Category.SENSOR})
-        link_findings(self.fv, state)
-        sp.addWidget(self.fv)
-        self.root.addWidget(sp, 1)
-        state.exhibit_changed.connect(self.refresh)
-        state.analysis_changed.connect(self.refresh)
-
-    @property
-    def store(self) -> prnu.PrnuStore:
-        return prnu.PrnuStore(self.state.settings.prnu_path)
-
-    def refresh(self) -> None:
-        self._items = self.store.list()
-        fill_table(self.table, [[i["id"], i["label"], i["model"], len(i["references"]), f"{i['shape'][1]}x{i['shape'][0]}",
-                                 i["created_utc"], i["operator"]] for i in self._items])
-        an = self.state.last_analysis()
-        rows = []
-        for r in (an or {}).get("results", {}).get("prnu", []):
-            rows.append([r["label"], r.get("pce"), "" if r.get("pce") is None else
-                         ("compatibile" if r["pce"] >= prnu.PCE_THRESHOLD else "non compatibile"), r.get("note", "")])
-        fill_table(self.res, rows)
-        self.fv.set_findings(an["findings"] if an else [])
-
-    def _add(self) -> None:
-        if not self.label.text().strip():
-            return self.error("Indica un'etichetta per l'impronta.")
-        files, _ = QFileDialog.getOpenFileNames(self, "Immagini di riferimento dello stesso dispositivo")
-        if not files:
-            return
-        label, model, op = self.label.text().strip(), self.model.text().strip(), self.state.operator
-
-        def done(item):
-            self.label.clear()
-            self.model.clear()
-            if self.state.case:
-                self.state.case.audit.append(op, "prnu_impronta_creata", {k: item[k] for k in
-                                             ("id", "label", "model", "fingerprint_sha256", "references")})
-            self.refresh()
-        self.state.run(lambda _p, _c: self.store.add(label, model, files, op), done, self.error)
-
-    def _delete(self) -> None:
-        rows = self.table.selectionModel().selectedRows()
-        if not rows:
-            return
-        fid = self.table.item(rows[0].row(), 0).text()
-        self.store.remove(fid)
-        if self.state.case:
-            self.state.case.audit.append(self.state.operator, "prnu_impronta_eliminata", {"id": fid})
-        self.refresh()
-
-    def _match(self) -> None:
-        if not (self.state.case and self.state.exhibit_id):
-            return self.error("Nessun reperto selezionato.")
-        if not self._items:
-            return self.error("Nessuna impronta disponibile: creane una con le immagini di riferimento.")
-        from ...core.pipeline import analyze_exhibit
-        case, ex, op, s = self.state.case, self.state.exhibit_id, self.state.operator, self.state.settings
-        self.state.run(lambda p, c: analyze_exhibit(case, ex, op, s, ["integrity", "signature", "prnu"], p, c),
-                       lambda _r: self.state.analysis_changed.emit(), self.error)
 
 
 class ComparisonPage(Page):

@@ -108,7 +108,7 @@ class CasesPage(Page):
         state.analysis_changed.connect(self.refresh)
 
     def apply_mode(self) -> None:
-        # le valutazioni dell'operatore restano disponibili; in vista semplice compaiono solo con un caso aperto
+        # le valutazioni dell'operatore restano disponibili; compaiono solo con un caso aperto
         self.notes_w.setVisible(not self.simple or self.state.case is not None)
 
     def refresh(self) -> None:

@@ -13,9 +13,8 @@ from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QHBoxLayout, QLa
 
 from .. import APP_NAME, __version__
 from . import theme
-from .pages.all_data import AllDataPage
-from .pages.advanced import ComparisonPage, PrnuPage, SteganalysisPage
-from .pages.analysis_views import AIDetectionPage, ImageForensicsPage, ManipulationPage, VideoForensicsPage
+from .pages.advanced import ComparisonPage, SteganalysisPage
+from .pages.analysis_views import ImageForensicsPage, ManipulationPage
 from .pages.cases_page import CasesPage
 from .pages.dashboard import DashboardPage
 from .pages.hex_page import HexPage
@@ -27,48 +26,33 @@ from .pages.misc_pages import ReportsPage, SettingsPage
 from .state import AppState
 from .theme import C
 
-# None = intestazione di sezione non selezionabile
+# Un'unica vista: i quattro passi, poi le analisi di approfondimento e gli strumenti, tutti nel menu.
 SECTIONS = [
-    ("FLUSSO DI LAVORO", ["Case Management", "Carica e analizza", "Dashboard", "All Data"]),
-    ("ANALISI", ["Image Forensics", "Manipulation Detection", "Steganalysis", "Metadata Analyzer",
-                 "Timeline Analyzer", "PRNU / Sensore", "AI Detection", "Video Forensics", "Human Pose"]),
-    ("STRUMENTI", ["Comparison Tool", "Hex Viewer", "File Integrity", "Reports"]),
-    ("SISTEMA", ["Settings"]),
-]
-NAV = [n for _, items in SECTIONS for n in items]
-# Vista semplice: i quattro passi, più le due pagine che servono a chi non è del mestiere. Le altre restano
-# raggiungibili dai pulsanti "Apri vista" e passando alla vista esperta.
-SIMPLE_SECTIONS = [
     ("COME SI USA", ["Case Management", "Carica e analizza", "Dashboard", "Reports"]),
-    ("APPROFONDISCI", ["All Data", "Human Pose"]),
+    ("ANALISI", ["Image Forensics", "Manipulation Detection", "Steganalysis", "Metadata Analyzer",
+                 "Timeline Analyzer", "Human Pose"]),
+    ("STRUMENTI", ["Comparison Tool", "Hex Viewer", "File Integrity"]),
     ("", ["Settings"]),
 ]
-SIMPLE_LABELS = {"Case Management": "1   Apri un caso", "Carica e analizza": "2   Aggiungi i file",
-                 "Dashboard": "3   Leggi i risultati", "Reports": "4   Crea il report",
-                 "All Data": "Tutti i dati del file", "Human Pose": "Persone nei video", "Settings": "Impostazioni"}
+NAV = [n for _, items in SECTIONS for n in items]
 LABELS = {
-    "Case Management": "Casi", "Carica e analizza": "Carica e analizza", "Dashboard": "Riepilogo",
-    "All Data": "Tutti i dati rinvenuti",
+    "Case Management": "1   Apri un caso", "Carica e analizza": "2   Aggiungi i file",
+    "Dashboard": "3   Risultati", "Reports": "4   Crea il report",
     "Image Forensics": "Analisi visiva", "Manipulation Detection": "Possibili modifiche",
     "Steganalysis": "Contenuti nascosti", "Metadata Analyzer": "Metadati", "Timeline Analyzer": "Date e orari",
-    "PRNU / Sensore": "Fotocamera di origine", "AI Detection": "Intelligenza artificiale",
-    "Video Forensics": "Video e audio", "Human Pose": "Persone e movimento",
+    "Human Pose": "Persone nei video",
     "Comparison Tool": "Confronta immagini", "Hex Viewer": "Byte del file (Hex)",
-    "File Integrity": "Verifica hash", "Reports": "Report", "Settings": "Impostazioni",
+    "File Integrity": "Verifica hash", "Settings": "Impostazioni",
 }
 HINTS = {
     "Case Management": "Crea o apri un caso: è il primo passo obbligatorio.",
     "Carica e analizza": "Aggiungi immagini, video, audio o cartelle al caso e avvia l'analisi.",
-    "Dashboard": "Cosa ha trovato il programma, in parole semplici.",
-    "All Data": "Ogni dato estratto dal reperto, anche senza anomalie: metadati, date, stream, movimento, hash.",
+    "Dashboard": "Cosa c'è da controllare in ogni file, in parole semplici.",
     "Image Forensics": "L'immagine affiancata alle mappe di analisi (ELA, copia di regioni, contrasto esaltato…).",
     "Manipulation Detection": "Segni di ritocchi, regioni copiate, ricompressioni.",
     "Steganalysis": "Messaggi, file o testo nascosti nell'immagine o nei suoi dati.",
     "Metadata Analyzer": "Informazioni scritte nel file da fotocamera e programmi.",
     "Timeline Analyzer": "Tutte le date e gli orari del file in ordine.",
-    "PRNU / Sensore": "Confronto con l'impronta del sensore di fotocamere note.",
-    "AI Detection": "Indizi di generazione con intelligenza artificiale nei metadati.",
-    "Video Forensics": "Tracce, durate e codifica di video e audio.",
     "Human Pose": "Video annotato, angoli nel tempo e continuità del movimento (Sports2D e Pose2Sim).",
     "Comparison Tool": "Confronta due immagini e trova quasi-duplicati.",
     "Hex Viewer": "Il contenuto grezzo del file, byte per byte (sola lettura).",
@@ -97,14 +81,24 @@ class MainWindow(QMainWindow):
         lv.setSpacing(0)
         brand = QWidget()
         brand.setObjectName("Brand")
-        bl = QVBoxLayout(brand)
-        bl.setContentsMargins(16, 14, 16, 8)
+        bl = QHBoxLayout(brand)
+        bl.setContentsMargins(16, 12, 16, 12)
+        bl.setSpacing(10)
+        initials = "".join(ch for ch in APP_NAME if ch.isupper())[:2] or APP_NAME[:1].upper()
+        mark = QLabel(initials)                        # monogramma: quadrato pieno, nessun arrotondamento
+        mark.setObjectName("BrandMark")
+        mark.setFixedSize(28, 24)
+        mark.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        bl.addWidget(mark, 0, Qt.AlignmentFlag.AlignTop)
+        names = QVBoxLayout()
+        names.setSpacing(0)
         n = QLabel(APP_NAME)
         n.setObjectName("BrandName")
         v = QLabel(f"versione {__version__}")
         v.setObjectName("Muted")
-        bl.addWidget(n)
-        bl.addWidget(v)
+        names.addWidget(n)
+        names.addWidget(v)
+        bl.addLayout(names, 1)
         lv.addWidget(brand)
         self.nav = QListWidget()
         self.nav.setObjectName("Sidebar")
@@ -121,7 +115,7 @@ class MainWindow(QMainWindow):
         ctx = QWidget()
         ctx.setObjectName("ContextBar")
         cl = QHBoxLayout(ctx)
-        cl.setContentsMargins(22, 8, 22, 8)
+        cl.setContentsMargins(24, 10, 24, 10)
         self.case_lbl = QLabel()
         cl.addWidget(self.case_lbl)
         cl.addSpacing(16)
@@ -132,12 +126,6 @@ class MainWindow(QMainWindow):
         self.ex_combo.currentIndexChanged.connect(self._ex_selected)
         cl.addWidget(self.ex_combo)
         cl.addStretch(1)
-        self.mode_btn = QPushButton()
-        self.mode_btn.setObjectName("ModeButton")
-        self.mode_btn.setToolTip("Vista semplice: solo i passi essenziali. Vista esperta: tutte le analisi, gli "
-                                 "strumenti e i dettagli tecnici.")
-        self.mode_btn.clicked.connect(self.toggle_mode)
-        cl.addWidget(self.mode_btn)
         self.sys_lbl = QLabel()
         cl.addWidget(self.sys_lbl)
         self.strict = QLabel()
@@ -149,11 +137,11 @@ class MainWindow(QMainWindow):
         self.stack = QStackedWidget()
         s = state
         self.pages = {
-            "Case Management": CasesPage(s), "Carica e analizza": LoadPage(s), "Dashboard": DashboardPage(s), "All Data": AllDataPage(s),
+            "Case Management": CasesPage(s), "Carica e analizza": LoadPage(s), "Dashboard": DashboardPage(s),
             "Image Forensics": ImageForensicsPage(s), "Manipulation Detection": ManipulationPage(s),
             "Steganalysis": SteganalysisPage(s), "Metadata Analyzer": MetadataPage(s),
-            "Timeline Analyzer": TimelinePage(s), "PRNU / Sensore": PrnuPage(s), "AI Detection": AIDetectionPage(s),
-            "Video Forensics": VideoForensicsPage(s), "Human Pose": PosePage(s),
+            "Timeline Analyzer": TimelinePage(s),
+            "Human Pose": PosePage(s),
             "Comparison Tool": ComparisonPage(s), "Hex Viewer": HexPage(s),
             "File Integrity": IntegrityPage(s), "Reports": ReportsPage(s), "Settings": SettingsPage(s)}
         # Ogni pagina sta in un'area scorrevole: se la finestra è più piccola dello spazio che la pagina richiede
@@ -206,17 +194,17 @@ class MainWindow(QMainWindow):
         self._ctx()
         self.go_to("Case Management")
 
-    # ---------- vista semplice / esperta ----------
+    # ---------- vista ----------
     @property
     def simple(self) -> bool:
-        return bool(getattr(self.state.settings, "ui_simple", True))
+        """Esiste una sola vista: le pagine mostrano l'essenziale e i dettagli a richiesta."""
+        return True
 
     def _build_nav(self) -> None:
         self.nav.blockSignals(True)
         self.nav.clear()
         self.items = {}
-        simple = self.simple
-        for title, names in (SIMPLE_SECTIONS if simple else SECTIONS):
+        for title, names in SECTIONS:
             if title:
                 hdr = QListWidgetItem(title)
                 hdr.setFlags(Qt.ItemFlag.NoItemFlags)
@@ -230,27 +218,18 @@ class MainWindow(QMainWindow):
                 sp.setFlags(Qt.ItemFlag.NoItemFlags)
                 self.nav.addItem(sp)
             for nm in names:
-                it = QListWidgetItem(SIMPLE_LABELS[nm] if simple else LABELS[nm])
+                it = QListWidgetItem(LABELS[nm])
                 it.setData(Qt.ItemDataRole.UserRole, nm)
                 self.nav.addItem(it)
                 self.items[nm] = it
         self.nav.blockSignals(False)
 
-    def toggle_mode(self) -> None:
-        s = self.state.settings
-        s.ui_simple = not self.simple
-        s.save()
-        cur = self.current_name()
-        self._build_nav()
-        for pg in self.pages.values():
-            pg.set_simple(s.ui_simple)
-        self._ctx()
-        self.go_to(cur or "Case Management")
-
     # ---------- navigazione ----------
     def go_to(self, name: str) -> None:
+        if name not in self.pages:          # pagina non più presente (es. collegamento di una versione precedente)
+            return
         it = self.items.get(name)
-        if it is None:          # pagina non presente nel menu della vista semplice: si apre comunque
+        if it is None:          # pagina non presente nel menu: si apre comunque
             if self.state.case is None and name not in ALWAYS:
                 return
             self.nav.blockSignals(True)
@@ -369,8 +348,6 @@ class MainWindow(QMainWindow):
         self.ex_combo.setVisible(bool(c))
         self.ex_lbl.setVisible(bool(c))
         st = self.state.settings.strict_forensic
-        self.strict.setVisible(not self.simple)
-        self.mode_btn.setText("Passa alla vista esperta" if self.simple else "Passa alla vista semplice")
         self.strict.setObjectName("Strict" if st else "StrictOff")
         self.strict.setText("Strict Forensic attiva" if st else "Strict Forensic disattivata")
         self.strict.style().unpolish(self.strict)

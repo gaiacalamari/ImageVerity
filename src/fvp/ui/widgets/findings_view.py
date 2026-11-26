@@ -33,7 +33,7 @@ class StatusGrid(QWidget):
         self.set_status({})
 
     def set_status(self, status: dict[Category, Status], hide_unverified: bool = False) -> None:
-        """hide_unverified: in vista semplice non mostra le aree non esaminate (es. "Audio" per una foto)."""
+        """hide_unverified: non mostra le aree non esaminate (es. "Audio" per una foto)."""
         for cat, lab in self.labels.items():
             st = status.get(cat, Status.GREY)
             lab.setVisible(not (hide_unverified and st == Status.GREY))
@@ -146,35 +146,40 @@ class FindingsView(QWidget):
         rows = self.table.selectionModel().selectedRows()
         if not rows:
             return
-        f = self._vis[rows[0].row()]
-        e = html.escape
-        col = LEVEL_COLORS[f.level.value]
-        page, art = explain.related_page(f), explain.related_map(f)
-        step = explain.next_step(f)
-        link = (f"<p><a href='open:{page}:{art or ''}'>Apri la vista collegata »</a></p>" if page else "")
-        parts = [f"<p style='margin:0'><b style='color:{col}'>{e(explain.LEVEL_PLAIN[f.level])}</b>"
-                 f" · {e(explain.CATEGORY_LABELS[f.category])}</p><h3 style='margin:4px 0 8px 0'>{e(f.title)}</h3>",
-                 f"<p><b>Cosa significa.</b> {e(explain.plain_explanation(f))}</p>"]
-        if step and explain.needs_attention(f):
-            parts.append(f"<p><b>Cosa fare.</b> {e(step)}</p>")
-        parts.append(link)
-        parts.append(f"<p style='color:{C['muted']};margin-bottom:2px'><b>Dati tecnici</b></p><table cellpadding='3'>"
-                     f"<tr><td style='color:{C['muted']}'>Descrizione</td><td>{e(f.description)}</td></tr>"
-                     f"<tr><td style='color:{C['muted']}'>Metodo</td><td>{e(f.method)}</td></tr>")
-        if f.evidence:
-            parts.append(f"<tr><td style='color:{C['muted']}'>Evidenza</td><td><pre>{e(f.evidence)}</pre></td></tr>")
-        if f.offset is not None:
-            parts.append(f"<tr><td style='color:{C['muted']}'>Posizione</td><td>byte {f.offset:,} (0x{f.offset:X})</td></tr>")
-        parts.append(f"<tr><td style='color:{C['muted']}'>Affidabilità</td><td>{e(f.confidence or 'n/d')}</td></tr>"
-                     f"<tr><td style='color:{C['muted']}'>Limiti</td><td>{e(f.limitations or '—')}</td></tr>"
-                     f"<tr><td style='color:{C['muted']}'>Modulo</td><td>{e(f.module)} ({e(f.level.label)})</td></tr></table>")
-        self.detail.setHtml("".join(parts))
+        self.detail.setHtml(finding_html(self._vis[rows[0].row()]))
 
     def _link(self, url) -> None:
         s = url.toString()
         if s.startswith("open:"):
             _, page, art = s.split(":", 2)
             self.open_page.emit(page, art)
+
+
+def finding_html(f: Finding, link: bool = True) -> str:
+    """Scheda di un risultato: prima cosa significa e cosa fare, poi i dati tecnici."""
+    e = html.escape
+    col = LEVEL_COLORS[f.level.value]
+    page, art = explain.related_page(f), explain.related_map(f)
+    step = explain.next_step(f)
+    parts = [f"<p style='margin:0'><b style='color:{col}'>{e(explain.LEVEL_PLAIN[f.level])}</b>"
+             f" · {e(explain.CATEGORY_LABELS[f.category])}</p><h3 style='margin:4px 0 8px 0'>{e(f.title)}</h3>",
+             f"<p><b>Cosa significa.</b> {e(explain.plain_explanation(f))}</p>"]
+    if step and explain.needs_attention(f):
+        parts.append(f"<p><b>Cosa fare.</b> {e(step)}</p>")
+    if link and page:
+        parts.append(f"<p><a href='open:{page}:{art or ''}'>Apri la vista collegata »</a></p>")
+    rows = [("Descrizione", e(f.description)), ("Metodo", e(f.method))]
+    if f.evidence:
+        rows.append(("Evidenza", f"<span style='font-family:monospace;white-space:pre-wrap'>{e(f.evidence)}</span>"))
+    if f.offset is not None:
+        rows.append(("Posizione", f"byte {f.offset:,} (0x{f.offset:X})"))
+    rows += [("Affidabilità", e(f.confidence or "n/d")), ("Limiti", e(f.limitations or "—")),
+             ("Modulo", f"{e(f.module)} ({e(f.level.label)})")]
+    # etichetta sopra il valore: leggibile anche in un riquadro stretto
+    parts.append(f"<p style='color:{C['muted']};margin:16px 0 6px 0'><b>Dati tecnici</b></p>" + "".join(
+        f"<p style='margin:0 0 8px 0'><span style='color:{C['muted']};font-size:9pt'>{k}</span><br>{v}</p>"
+        for k, v in rows))
+    return "".join(parts)
 
 
 def status_for(analysis: dict | None) -> dict[Category, Status]:

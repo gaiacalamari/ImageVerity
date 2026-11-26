@@ -34,7 +34,7 @@ from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[1]
-UA = {"User-Agent": "ForensicVisionPro-fetch/1.0"}
+UA = {"User-Agent": "ImageVerity-fetch/1.0"}
 
 
 class FetchError(RuntimeError):

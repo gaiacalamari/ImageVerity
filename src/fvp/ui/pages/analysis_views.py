@@ -1,11 +1,11 @@
-"""Pagine di analisi: Image Forensics, Manipulation Detection, Video Forensics, AI Detection."""
+"""Pagine di analisi: Image Forensics, Manipulation Detection."""
 from __future__ import annotations
 
 from pathlib import Path
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import (QComboBox, QHBoxLayout, QLabel, QPushButton, QSpinBox, QSplitter, QTabWidget,
-                               QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QComboBox, QHBoxLayout, QLabel, QPushButton, QSpinBox, QSplitter, QVBoxLayout,
+                               QWidget)
 
 from ...core.findings import Category
 from ...engines import image
@@ -187,82 +187,3 @@ class ManipulationPage(FindingsPage):
             "Attivi: ELA singola e multi-qualità, JPEG ghost, doppia quantizzazione DCT, griglia 8x8, residuo di "
             "rumore, filtro mediano, copy-move, miniatura EXIF, struttura del file. Non ancora implementati: analisi "
             "di illuminazione, ombre e prospettiva; rilevatori neurali di splicing (milestone 4)."))
-
-
-class AIDetectionPage(FindingsPage):
-    title = "Intelligenza artificiale"
-    lead = "Indizi che l'immagine sia stata creata con l'intelligenza artificiale."
-    intro = ("In questa versione il modulo cerca solo indicatori di provenienza nei metadati: tag IPTC "
-             "DigitalSourceType, nomi di generatori, parametri di generazione nei PNG, segmenti C2PA.")
-    categories = {Category.AI_GENERATION, Category.DEEPFAKE}
-
-    def extra_top(self) -> None:
-        self.root.addWidget(not_implemented(
-            "Non ancora implementati (milestone 4): validazione crittografica C2PA, rilevamento di watermark, modelli "
-            "di classificazione locali (ONNX/PyTorch) e rilevamento deepfake. Nessun risultato in questa pagina deriva "
-            "da un modello statistico. L'assenza di indicatori nei metadati non esclude la generazione AI: i metadati "
-            "si rimuovono facilmente."))
-
-
-class VideoForensicsPage(Page):
-    title = "Video e audio"
-    lead = "Tracce, durata e codifica del video e dell'audio."
-    intro = ("Contenitore, stream e coerenza tra tracce, letti con FFprobe, e albero degli atom per MP4/MOV. "
-             "Durate diverse tra audio e video, tracce create in momenti diversi o un encoder di editing sono "
-             "elementi da approfondire.")
-
-    def __init__(self, state):
-        super().__init__(state)
-        self.root.addWidget(not_implemented(
-            "Non ancora implementati (milestone 3): estrazione e confronto dei frame, frame duplicati o mancanti, "
-            "analisi GOP e compressione per segmento, waveform e spettrogramma audio."))
-        tabs = QTabWidget()
-        self.streams = make_table(["#", "Tipo", "Codec", "Profilo", "Risoluzione", "Frame rate (nom./medio)",
-                                   "Durata", "Bitrate", "Tag"])
-        self.fmt = make_table(["Proprietà", "Valore"])
-        self.atoms = QTreeWidget()
-        self.atoms.setHeaderLabels(["Atom", "Offset", "Lunghezza", "Campi"])
-        self.fv = FindingsView({Category.VIDEO_INTEGRITY, Category.AUDIO_INTEGRITY, Category.TEMPORAL,
-                                Category.FILE_STRUCTURE})
-        tabs.addTab(self.streams, "Stream")
-        tabs.addTab(self.fmt, "Contenitore")
-        tabs.addTab(self.atoms, "Struttura atom")
-        tabs.addTab(self.fv, "Risultati")
-        self.root.addWidget(tabs, 1)
-        state.exhibit_changed.connect(self.refresh)
-        state.analysis_changed.connect(self.refresh)
-
-    def refresh(self) -> None:
-        an = self.state.last_analysis()
-        v = an["results"].get("video") if an else None
-        self.atoms.clear()
-        if not v:
-            self.streams.setRowCount(0)
-            self.fmt.setRowCount(0)
-            self.fv.set_findings([])
-            return
-        rows = []
-        for s in v["streams"]:
-            res = f"{s.get('width')}x{s.get('height')}" if s.get("width") else \
-                (f"{s.get('sample_rate')} Hz, {s.get('channels')} ch" if s.get("sample_rate") else "")
-            fr = f"{s.get('r_frame_rate')} / {s.get('avg_frame_rate')}" if s.get("r_frame_rate") else ""
-            rows.append([s["index"], s["type"], s["codec"], s.get("profile"), res, fr, s.get("duration"),
-                         s.get("bit_rate"), "; ".join(f"{k}={val}" for k, val in s.get("tags", {}).items())])
-        fill_table(self.streams, rows)
-        fill_table(self.fmt, [["Contenitore", v["container"]], ["Durata (s)", v["duration_s"]],
-                              ["Bitrate", v["bitrate"]], ["Dimensione", v["size"]]] +
-                   [[f"tag: {k}", val] for k, val in v["tags"].items()])
-        st = an["results"].get("structure")
-        if st:
-            def add(parent, node):
-                it = QTreeWidgetItem([node["name"], f"0x{node['offset']:X}", str(node["length"]),
-                                      "; ".join(f"{k}={val}" for k, val in node["fields"].items())[:300]])
-                (parent.addChild(it) if isinstance(parent, QTreeWidgetItem) else parent.addTopLevelItem(it))
-                for c in node["children"]:
-                    add(it, c)
-            for c in st["root"]["children"]:
-                add(self.atoms, c)
-            self.atoms.expandToDepth(1)
-            for i in range(4):
-                self.atoms.resizeColumnToContents(i)
-        self.fv.set_findings(an["findings"])

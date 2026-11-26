@@ -11,7 +11,7 @@ class Page(QWidget):
 
     lead  = una frase semplice, sempre visibile (cosa si trova nella pagina);
     intro = spiegazione completa (metodo, limiti, come leggere i risultati), mostrata solo a richiesta.
-    In vista semplice le pagine nascondono comandi e dettagli tecnici (apply_mode)."""
+    Le pagine mostrano l'essenziale e tengono comandi e dettagli tecnici dietro un pulsante (apply_mode)."""
     title = ""
     lead = ""
     intro = ""
@@ -19,10 +19,10 @@ class Page(QWidget):
     def __init__(self, state, parent=None):
         super().__init__(parent)
         self.state = state
-        self.simple = bool(getattr(state.settings, "ui_simple", True))
+        self.simple = True                     # vista unica: essenziale in evidenza, dettagli a richiesta
         self.root = QVBoxLayout(self)
-        self.root.setContentsMargins(22, 16, 22, 16)
-        self.root.setSpacing(10)
+        self.root.setContentsMargins(28, 22, 28, 22)
+        self.root.setSpacing(12)
         head = QHBoxLayout()
         t = QLabel(self.title)
         t.setObjectName("PageTitle")
@@ -57,7 +57,7 @@ class Page(QWidget):
         self.apply_mode()
 
     def apply_mode(self) -> None:
-        """Mostra o nasconde i controlli avanzati secondo la vista (semplice / esperta)."""
+        """Stato iniziale dei controlli avanzati della pagina (nascosti dietro un pulsante)."""
 
     def refresh(self) -> None:
         """Aggiorna la pagina quando diventa visibile o cambia il contesto."""

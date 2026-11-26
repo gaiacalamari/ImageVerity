@@ -1,6 +1,6 @@
 """Controllo automatico di dipendenze e strumenti.
 
-Eseguito all'avvio dell'interfaccia, dalla pagina Settings e dalla build (`ForensicVisionPro.exe --selfcheck`).
+Eseguito all'avvio dell'interfaccia, dalla pagina Settings e dalla build (`ImageVerity.exe --selfcheck`).
 Ogni strumento esterno è verificato con una prova reale (non solo la presenza del file), e gli eseguibili
 installati da tools/fetch_tools.py sono confrontati con gli hash registrati in bin/tools.lock.json.
 """

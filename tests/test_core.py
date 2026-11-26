@@ -121,3 +121,14 @@ def test_category_status_rules():
 def test_finding_roundtrip():
     f = Finding(Category.TEMPORAL, Level.ANOMALY, "t", "d", "m", "mod", offset=12, data={"a": 1})
     assert Finding.from_dict(f.to_dict()) == f
+
+
+def test_home_dir_keeps_legacy_folder(tmp_path):
+    from fvp.core.config import home_dir
+    assert home_dir(tmp_path) == tmp_path / "ImageVerity"               # installazione nuova
+    (tmp_path / "ForensicVisionPro").mkdir()
+    assert home_dir(tmp_path) == tmp_path / "ForensicVisionPro"         # solo la cartella del primo nome
+    (tmp_path / "Veridica").mkdir()
+    assert home_dir(tmp_path) == tmp_path / "Veridica"                  # il nome intermedio ha la precedenza
+    (tmp_path / "ImageVerity").mkdir()
+    assert home_dir(tmp_path) == tmp_path / "ImageVerity"               # esiste la nuova: vale quella

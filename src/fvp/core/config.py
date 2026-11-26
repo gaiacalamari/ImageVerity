@@ -16,7 +16,21 @@ def default_home() -> Path:
         exe_dir = Path(sys.executable).parent
         if (exe_dir / "portable.flag").exists():     # versione portable: dati accanto all'eseguibile
             return exe_dir / "data"
-    return Path.home() / "ForensicVisionPro"
+    return home_dir(Path.home())
+
+
+DIR_NAME = "ImageVerity"
+LEGACY_DIR_NAMES = ("Veridica", "ForensicVisionPro")    # nomi precedenti: i casi già creati restano dove sono
+
+
+def home_dir(base: Path) -> Path:
+    """<base>/ImageVerity; se non esiste ma c'è la cartella di un nome precedente, continua a usare quella."""
+    new = base / DIR_NAME
+    if not new.exists():
+        for name in LEGACY_DIR_NAMES:
+            if (base / name).is_dir():
+                return base / name
+    return new
 
 
 @dataclass
@@ -31,7 +45,7 @@ class Settings:
     tool_timeout_s: int = 120
     max_image_pixels: int = 250_000_000
     ui_mode: str = "Advanced"          # Basic | Advanced | Expert
-    ui_simple: bool = True             # vista semplice: solo i passi essenziali, dettagli tecnici a richiesta
+    ui_simple: bool = True             # non più usato (vista unica); resta per i settings.json esistenti
     ui_theme: str = "light"            # light | dark
     # Persone e movimento (stima della posa, metodologia Sports2D)
     pose_det_model: str = ""           # vuoto = bin/ o <home>/models

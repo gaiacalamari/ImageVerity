@@ -1,19 +1,20 @@
-# Manuale utente — Forensic Vision Pro 1.5
+# Manuale utente — ImageVerity 1.5
 
 ## In breve: i quattro passi
 
-Il programma si apre nella **vista semplice**. Nel menu a sinistra ci sono i passi da seguire in ordine:
+Nel menu a sinistra, in alto, ci sono i passi da seguire in ordine:
 
 1. **Apri un caso**: scrivi il tuo nome, un numero e un titolo, poi *Crea caso* (oppure apri un caso esistente).
 2. **Aggiungi i file**: trascina foto, video o cartelle nel riquadro, lascia il tipo di analisi *Completa* e premi
    *Avvia l'analisi*.
-3. **Leggi i risultati**: in alto la sintesi in parole semplici, sotto ciò che merita attenzione. I colori indicano
+3. **Risultati**: scegli un file e leggi cosa c'è da controllare, in parole semplici. I colori indicano
    dove guardare, non se un file è falso.
 4. **Crea il report**: il documento finale da consegnare.
 
-*Tutti i dati del file* mostra ogni informazione estratta; *Persone nei video* il video con lo scheletro, gli angoli
-e il modello 3D. In ogni pagina il pulsante **Come funziona** spiega metodo e limiti. Per tutte le analisi e gli
-strumenti tecnici: **Passa alla vista esperta**, in alto a destra.
+Sotto i passi, la sezione **Analisi** raccoglie le singole analisi (*Analisi visiva*,
+*Metadati*, *Date e orari*, *Persone nei video*…) e la sezione **Strumenti** *Confronta immagini*,
+*Byte del file (Hex)* e *Verifica hash*. In ogni pagina il pulsante **Come funziona** spiega metodo e limiti; le
+opzioni tecniche restano dietro pulsanti come *Scegli le singole analisi* o *Mostra tutti i controlli eseguiti*.
 
 ## Primo avvio
 
@@ -43,10 +44,16 @@ Il modulo **Confronto con gli altri reperti** abbina foto e filmato delle Live P
 
 ## Leggere i risultati
 
-La pagina **Riepilogo** è il punto di partenza. In alto c'è la sintesi del caso in parole semplici. Sotto ci sono il racconto del file selezionato (menu "File" in alto) e l'elenco di **ciò che merita attenzione**:
+La pagina **Risultati** è il punto di partenza. In alto una frase dice quanti file hanno qualcosa da controllare e
+se i file sono rimasti integri durante l'analisi.
 
-- **Dettagli** apre, nell'elenco sottostante, la spiegazione completa: «Cosa significa», «Cosa fare» e i dati tecnici;
-- **Apri vista** porta alla sezione utile, ad esempio la mappa giusta in *Analisi visiva* o il testo estratto in *Contenuti nascosti*.
+- **A sinistra**, l'elenco dei file, ciascuno con il suo esito: *Nessun problema trovato* (verde) oppure *N punti da
+  controllare* (giallo o rosso).
+- **A destra**, per il file scelto, i punti da controllare in ordine di importanza, ciascuno con una spiegazione in
+  parole semplici. Cliccandone uno si apre la sua scheda: *Cosa significa*, *Cosa fare* e il pulsante **Apri la
+  pagina per approfondire**; i dati tecnici sono dietro **Dati tecnici**. *‹ Tutti i punti di questo file* torna
+  all'elenco.
+- *Mostra anche i controlli che non hanno trovato nulla* aggiunge, in fondo, l'elenco completo dei controlli.
 
 Esiti dei singoli controlli: **Fatto accertato** (oggettivo e ripetibile), **Anomalia**, **Da verificare** (compatibile con una modifica ma con spiegazioni anche normali), **Indicazione statistica** (una mappa o un calcolo da interpretare), **Non verificabile**, **Informazione**.
 
@@ -81,7 +88,6 @@ Verde: i test eseguiti non hanno rilevato anomalie. Giallo: elementi da approfon
   - *Contenuti estratti*: testo, file o intestazioni trovati da StegoIntelligence nei bit meno significativi, con SHA-256, apribili nell'Hex Viewer.
   - *Esplora i bit (avanzato)*: test statistici per canale e ogni canale e bit come immagine, alla maniera di Stegsolve.
   - *Strumenti e tecniche*: cosa è coperto rispetto al catalogo StegoIntelligence.
-- **Fotocamera di origine**: crea un'impronta da almeno 5 immagini (meglio 20+) dello stesso dispositivo, alla stessa risoluzione e non ridimensionate; poi confronta il reperto. PCE oltre 60 indica compatibilità con il sensore, non un'attribuzione certa.
 - **Persone e movimento**: si attiva con il profilo *Persone e movimento (video)*, con la casella del modulo o con il
   pulsante *Analizza persone e movimento* della pagina. Non fa parte del profilo *Completa* perché sui video richiede
   molto calcolo (circa 3–10 frame al secondo su CPU; al massimo 3.600 frame per video, modificabile).
@@ -120,7 +126,7 @@ python tools/fetch_tools.py --only pose-models    # installa i modelli in bin/ e
 Controllare e conservare il diff di `bin/tools.json` (le due impronte SHA-256): da quel momento ogni build scarica e
 accetta solo quei file. In Impostazioni → Stato del sistema la voce *Stima della posa* deve risultare OK. In
 alternativa i file `pose_det_yolox_m_humanart.onnx` e `pose_rtmpose_m_halpe26.onnx` possono essere copiati in
-`<cartella utente>/ForensicVisionPro/models` o indicati in `settings.json` (`pose_det_model`, `pose_model`).
+`<cartella utente>/ImageVerity/models` o indicati in `settings.json` (`pose_det_model`, `pose_model`).
 
 ## Video annotato, angoli e Sports2D / Pose2Sim originali
 
@@ -135,15 +141,12 @@ I programmi originali di David Pagnon si installano una volta, con Internet e Py
 py -3.12 tools\install_sports2d.py
 ```
 
-L'ambiente viene creato in `<utente>\ForensicVisionPro\sports2d-env` (la build lo fa da sola). Poi, scheda
+L'ambiente viene creato in `<utente>\ImageVerity\sports2d-env` (la build lo fa da sola). Poi, scheda
 *Sports2D / Pose2Sim originali* → *Esegui Sports2D originale sul reperto*, oppure modulo omonimo in Carica e analizza.
 Sports2D lavora su una copia verificata del reperto; i suoi risultati compaiono in *Video e angoli* scegliendo la
 fonte "Sports2D originale". Senza statura indicata in Impostazioni non viene fatta alcuna conversione in metri.
 Pose2Sim viene usato tramite Sports2D (filtri, metri, OpenSim): la ricostruzione 3D di Pose2Sim richiede più telecamere
 calibrate e non si applica a un video singolo.
-
-La pagina **Tutti i dati rinvenuti** riporta ogni dato estratto dall'ultima analisi del reperto, anche quando non ci
-sono anomalie, con le anomalie in cima.
 
 ### Modello OpenSim (.osim)
 
