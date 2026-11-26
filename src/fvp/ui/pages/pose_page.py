@@ -261,7 +261,7 @@ class PosePage(Page):
             persons = [(f"P{p['track']}", exp[p["mot"]]["path"]) for p in pr.get("persons", [])
                        if p.get("mot") in exp]
             marks = [(e["time_s"], C["red"] if e["class"] == "scena" else C["orange"]) for e in pr.get("transitions", [])]
-            srcs[SRC_FVP] = {"label": "Forensic Vision Pro", "video": r.get("artifacts", {}).get("pose_video", ""),
+            srcs[SRC_FVP] = {"label": "Veridica", "video": r.get("artifacts", {}).get("pose_video", ""),
                              "persons": persons, "marks": marks}
         sp = r.get("sports2d")
         if sp and (sp.get("video") or sp.get("mot")):
@@ -356,7 +356,7 @@ class PosePage(Page):
         info = QLabel("Esegue Sports2D e Pose2Sim originali (David Pagnon, BSD-3-Clause) su una copia verificata del "
                       "reperto, in un ambiente Python separato. Video annotato, angoli (.mot) e traiettorie (.trc) "
                       "prodotti dai programmi originali si vedono nella scheda 'Video e angoli' scegliendo la fonte "
-                      "Sports2D, affiancati a quelli di Forensic Vision Pro. Ogni file è registrato con SHA-256.")
+                      "Sports2D, affiancati a quelli di Veridica. Ogni file è registrato con SHA-256.")
         info.setWordWrap(True)
         lay.addWidget(info)
         row = QHBoxLayout()

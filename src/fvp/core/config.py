@@ -16,7 +16,17 @@ def default_home() -> Path:
         exe_dir = Path(sys.executable).parent
         if (exe_dir / "portable.flag").exists():     # versione portable: dati accanto all'eseguibile
             return exe_dir / "data"
-    return Path.home() / "ForensicVisionPro"
+    return home_dir(Path.home())
+
+
+LEGACY_DIR_NAME = "ForensicVisionPro"     # nome precedente: i casi già creati restano dove sono
+DIR_NAME = "Veridica"
+
+
+def home_dir(base: Path) -> Path:
+    """<base>/Veridica; se esiste soltanto la cartella del nome precedente, continua a usare quella."""
+    new, old = base / DIR_NAME, base / LEGACY_DIR_NAME
+    return old if old.is_dir() and not new.exists() else new
 
 
 @dataclass

@@ -1,6 +1,6 @@
 """Sports2D e Pose2Sim originali (David Pagnon, BSD-3-Clause) eseguiti sul reperto.
 
-Il modulo "pose" di Forensic Vision Pro riproduce la metodologia di Sports2D con modelli verificati da hash. Questo
+Il modulo "pose" di Veridica riproduce la metodologia di Sports2D con modelli verificati da hash. Questo
 modulo esegue invece i programmi originali, così i risultati si possono confrontare e presentare con gli stessi
 strumenti usati in biomeccanica:
 
@@ -11,7 +11,7 @@ strumenti usati in biomeccanica:
   (https://simtk.org/projects/opensim) per vedere il modello 3D che ripete il movimento del video.
 
 I due programmi girano in un ambiente Python separato (vedi tools/install_sports2d.py): hanno dipendenze proprie
-(PyQt, OpenSim, OpenVINO) incompatibili con l'eseguibile e non modificano l'ambiente di Forensic Vision Pro.
+(PyQt, OpenSim, OpenVINO) incompatibili con l'eseguibile e non modificano l'ambiente di Veridica.
 
 Precauzioni forensi:
 - Sports2D lavora su una copia della copia di lavoro, in una cartella degli artifacts del caso, con hash verificato
@@ -44,7 +44,7 @@ PACKAGES = ("sports2d", "pose2sim", "rtmlib", "onnxruntime", "openvino", "opencv
 VIDEO_EXT = (".mp4", ".avi", ".mov", ".mkv")
 DEFAULT_HEIGHT_M = 1.70        # Sports2D: default_height; usata solo se la statura non è documentata
 
-OPENSIM_README = """Modello OpenSim prodotto da Sports2D/Pose2Sim (Forensic Vision Pro)
+OPENSIM_README = """Modello OpenSim prodotto da Sports2D/Pose2Sim (Veridica)
 
 File in questa cartella:
 - {model}  modello muscoloscheletrico scalato sulla persona (scheletro, articolazioni, muscoli)
@@ -62,7 +62,7 @@ Errore di ricostruzione dei marcatori (cinematica inversa): {ik_error}
 Il file *_m_*.trc (marcatori in metri) si può sovrapporre con File > Preview Experimental Data.
 
 {height_note}
-Gli SHA-256 di tutti i file sono registrati nell'analisi del caso (Forensic Vision Pro, pagina Persone e movimento).
+Gli SHA-256 di tutti i file sono registrati nell'analisi del caso (Veridica, pagina Persone e movimento).
 """
 
 
@@ -157,7 +157,7 @@ def build_command(py: Path, video: Path, result_dir: Path, settings=None) -> lis
            "--nb_persons_to_detect", "all", "--person_ordering_method", "highest_likelihood",
            # --save_graphs false: con show_graphs=false e save_graphs=true Sports2D 0.8.x termina con
            # "AttributeError: 'list' object has no attribute 'close'" prima di salvare il video e di eseguire la
-           # cinematica inversa (nessun .osim). I grafici degli angoli li produce comunque Forensic Vision Pro.
+           # cinematica inversa (nessun .osim). I grafici degli angoli li produce comunque Veridica.
            "--show_realtime_results", "false", "--show_graphs", "false", "--save_graphs", "false",
            "--save_vid", "true", "--save_img", "false", "--save_pose", "true",
            "--calculate_angles", "true", "--save_angles", "true", "--mode", "balanced"]
@@ -344,11 +344,11 @@ def run(working_copy: str | Path, out_dir: Path, settings=None, progress: Progre
             f"Sports2D originale eseguito: {len(vids)} video annotato, {len(mots)} file di angoli, {len(trcs)} di "
             "traiettorie",
             f"Analisi indipendente con i programmi originali in {dur} s. I risultati sono affiancati a quelli di "
-            "Forensic Vision Pro nella pagina Persone e movimento per il confronto.", METHOD, MODULE, evidence=ev,
+            "Veridica nella pagina Persone e movimento per il confronto.", METHOD, MODULE, evidence=ev,
             confidence="n/a",
             limitations="RTMLib scarica i modelli senza un'impronta fissata: gli SHA-256 dei modelli in cache sono "
                         "registrati nei risultati. L'ordine e la numerazione delle persone possono differire da "
-                        "quelli di Forensic Vision Pro." + (
+                        "quelli di Veridica." + (
                             f" Statura documentata: {h:g} m." if not assumed else
                             f" Statura non documentata: per il modello OpenSim è usata quella predefinita ({h:g} m)."
                             if want_osim else " Nessuna conversione in metri: statura non indicata."),

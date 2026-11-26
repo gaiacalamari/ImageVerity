@@ -1,4 +1,4 @@
-# Manuale utente — Forensic Vision Pro 1.5
+# Manuale utente — Veridica 1.5
 
 ## In breve: i quattro passi
 
@@ -120,7 +120,7 @@ python tools/fetch_tools.py --only pose-models    # installa i modelli in bin/ e
 Controllare e conservare il diff di `bin/tools.json` (le due impronte SHA-256): da quel momento ogni build scarica e
 accetta solo quei file. In Impostazioni → Stato del sistema la voce *Stima della posa* deve risultare OK. In
 alternativa i file `pose_det_yolox_m_humanart.onnx` e `pose_rtmpose_m_halpe26.onnx` possono essere copiati in
-`<cartella utente>/ForensicVisionPro/models` o indicati in `settings.json` (`pose_det_model`, `pose_model`).
+`<cartella utente>/Veridica/models` o indicati in `settings.json` (`pose_det_model`, `pose_model`).
 
 ## Video annotato, angoli e Sports2D / Pose2Sim originali
 
@@ -135,7 +135,7 @@ I programmi originali di David Pagnon si installano una volta, con Internet e Py
 py -3.12 tools\install_sports2d.py
 ```
 
-L'ambiente viene creato in `<utente>\ForensicVisionPro\sports2d-env` (la build lo fa da sola). Poi, scheda
+L'ambiente viene creato in `<utente>\Veridica\sports2d-env` (la build lo fa da sola). Poi, scheda
 *Sports2D / Pose2Sim originali* → *Esegui Sports2D originale sul reperto*, oppure modulo omonimo in Carica e analizza.
 Sports2D lavora su una copia verificata del reperto; i suoi risultati compaiono in *Video e angoli* scegliendo la
 fonte "Sports2D originale". Senza statura indicata in Impostazioni non viene fatta alcuna conversione in metri.

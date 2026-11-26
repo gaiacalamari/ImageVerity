@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "forensic-vision-pro"
+name = "veridica"
 version = "1.5.1"
 description = "Suite desktop di analisi forense per immagini e video"
 requires-python = ">=3.10"
@@ -16,7 +16,7 @@ pose = ["onnxruntime>=1.17"]
 dev = ["pytest>=8", "pyflakes", "pyinstaller>=6.6", "onnx>=1.15"]
 
 [project.gui-scripts]
-forensic-vision-pro = "fvp.ui.app:main"
+veridica = "fvp.ui.app:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

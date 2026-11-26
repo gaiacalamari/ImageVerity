@@ -210,7 +210,7 @@ class AllDataPage(Page):
         pr = r.get("pose")
         if pr:
             fr = pr.get("frames", {})
-            s = self._section("Persone e movimento (Forensic Vision Pro)",
+            s = self._section("Persone e movimento (Veridica)",
                               f"{len(pr.get('persons', []))} persone · {fr.get('analyzed', 1)} frame · "
                               f"{len(pr.get('transitions', []))} discontinuità")
             self._generic(s, pr)
