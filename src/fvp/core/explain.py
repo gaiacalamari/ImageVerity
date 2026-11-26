@@ -110,7 +110,7 @@ RULES: list[tuple[str, str, str, str, str | None]] = [
      "Accerta se e come il file è stato elaborato; il dato è modificabile.", "Metadata Analyzer", None),
     (r"^Metadati riferiti a generazione AI", "I metadati citano strumenti di intelligenza artificiale o dichiarano un "
      "contenuto generato.", "Verifica la provenienza dichiarata; i metadati possono essere aggiunti o rimossi.",
-     "AI Detection", None),
+     "Metadata Analyzer", None),
     (r"^Data futura|^Data impossibile|^Data anteriore", "Una data registrata nel file è impossibile o fuori dal normale.",
      "Verifica l'orologio del dispositivo e la storia del file.", "Timeline Analyzer", None),
     (r"^ModifyDate precedente", "La data di modifica risulta precedente a quella dello scatto: le date sono state "

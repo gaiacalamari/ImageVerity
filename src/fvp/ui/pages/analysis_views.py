@@ -189,21 +189,6 @@ class ManipulationPage(FindingsPage):
             "di illuminazione, ombre e prospettiva; rilevatori neurali di splicing (milestone 4)."))
 
 
-class AIDetectionPage(FindingsPage):
-    title = "Intelligenza artificiale"
-    lead = "Indizi che l'immagine sia stata creata con l'intelligenza artificiale."
-    intro = ("In questa versione il modulo cerca solo indicatori di provenienza nei metadati: tag IPTC "
-             "DigitalSourceType, nomi di generatori, parametri di generazione nei PNG, segmenti C2PA.")
-    categories = {Category.AI_GENERATION, Category.DEEPFAKE}
-
-    def extra_top(self) -> None:
-        self.root.addWidget(not_implemented(
-            "Non ancora implementati (milestone 4): validazione crittografica C2PA, rilevamento di watermark, modelli "
-            "di classificazione locali (ONNX/PyTorch) e rilevamento deepfake. Nessun risultato in questa pagina deriva "
-            "da un modello statistico. L'assenza di indicatori nei metadati non esclude la generazione AI: i metadati "
-            "si rimuovono facilmente."))
-
-
 class VideoForensicsPage(Page):
     title = "Video e audio"
     lead = "Tracce, durata e codifica del video e dell'audio."

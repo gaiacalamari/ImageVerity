@@ -13,9 +13,8 @@ from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QHBoxLayout, QLa
 
 from .. import APP_NAME, __version__
 from . import theme
-from .pages.all_data import AllDataPage
 from .pages.advanced import ComparisonPage, PrnuPage, SteganalysisPage
-from .pages.analysis_views import AIDetectionPage, ImageForensicsPage, ManipulationPage, VideoForensicsPage
+from .pages.analysis_views import ImageForensicsPage, ManipulationPage, VideoForensicsPage
 from .pages.cases_page import CasesPage
 from .pages.dashboard import DashboardPage
 from .pages.hex_page import HexPage
@@ -30,8 +29,8 @@ from .theme import C
 # Un'unica vista: i quattro passi, poi le analisi di approfondimento e gli strumenti, tutti nel menu.
 SECTIONS = [
     ("COME SI USA", ["Case Management", "Carica e analizza", "Dashboard", "Reports"]),
-    ("ANALISI", ["All Data", "Image Forensics", "Manipulation Detection", "Steganalysis", "Metadata Analyzer",
-                 "Timeline Analyzer", "PRNU / Sensore", "AI Detection", "Video Forensics", "Human Pose"]),
+    ("ANALISI", ["Image Forensics", "Manipulation Detection", "Steganalysis", "Metadata Analyzer",
+                 "Timeline Analyzer", "PRNU / Sensore", "Video Forensics", "Human Pose"]),
     ("STRUMENTI", ["Comparison Tool", "Hex Viewer", "File Integrity"]),
     ("", ["Settings"]),
 ]
@@ -39,10 +38,9 @@ NAV = [n for _, items in SECTIONS for n in items]
 LABELS = {
     "Case Management": "1   Apri un caso", "Carica e analizza": "2   Aggiungi i file",
     "Dashboard": "3   Leggi i risultati", "Reports": "4   Crea il report",
-    "All Data": "Tutti i dati del file",
     "Image Forensics": "Analisi visiva", "Manipulation Detection": "Possibili modifiche",
     "Steganalysis": "Contenuti nascosti", "Metadata Analyzer": "Metadati", "Timeline Analyzer": "Date e orari",
-    "PRNU / Sensore": "Fotocamera di origine", "AI Detection": "Intelligenza artificiale",
+    "PRNU / Sensore": "Fotocamera di origine",
     "Video Forensics": "Video e audio", "Human Pose": "Persone nei video",
     "Comparison Tool": "Confronta immagini", "Hex Viewer": "Byte del file (Hex)",
     "File Integrity": "Verifica hash", "Settings": "Impostazioni",
@@ -51,14 +49,12 @@ HINTS = {
     "Case Management": "Crea o apri un caso: è il primo passo obbligatorio.",
     "Carica e analizza": "Aggiungi immagini, video, audio o cartelle al caso e avvia l'analisi.",
     "Dashboard": "Cosa ha trovato il programma, in parole semplici.",
-    "All Data": "Ogni dato estratto dal reperto, anche senza anomalie: metadati, date, stream, movimento, hash.",
     "Image Forensics": "L'immagine affiancata alle mappe di analisi (ELA, copia di regioni, contrasto esaltato…).",
     "Manipulation Detection": "Segni di ritocchi, regioni copiate, ricompressioni.",
     "Steganalysis": "Messaggi, file o testo nascosti nell'immagine o nei suoi dati.",
     "Metadata Analyzer": "Informazioni scritte nel file da fotocamera e programmi.",
     "Timeline Analyzer": "Tutte le date e gli orari del file in ordine.",
     "PRNU / Sensore": "Confronto con l'impronta del sensore di fotocamere note.",
-    "AI Detection": "Indizi di generazione con intelligenza artificiale nei metadati.",
     "Video Forensics": "Tracce, durate e codifica di video e audio.",
     "Human Pose": "Video annotato, angoli nel tempo e continuità del movimento (Sports2D e Pose2Sim).",
     "Comparison Tool": "Confronta due immagini e trova quasi-duplicati.",
@@ -144,10 +140,10 @@ class MainWindow(QMainWindow):
         self.stack = QStackedWidget()
         s = state
         self.pages = {
-            "Case Management": CasesPage(s), "Carica e analizza": LoadPage(s), "Dashboard": DashboardPage(s), "All Data": AllDataPage(s),
+            "Case Management": CasesPage(s), "Carica e analizza": LoadPage(s), "Dashboard": DashboardPage(s),
             "Image Forensics": ImageForensicsPage(s), "Manipulation Detection": ManipulationPage(s),
             "Steganalysis": SteganalysisPage(s), "Metadata Analyzer": MetadataPage(s),
-            "Timeline Analyzer": TimelinePage(s), "PRNU / Sensore": PrnuPage(s), "AI Detection": AIDetectionPage(s),
+            "Timeline Analyzer": TimelinePage(s), "PRNU / Sensore": PrnuPage(s),
             "Video Forensics": VideoForensicsPage(s), "Human Pose": PosePage(s),
             "Comparison Tool": ComparisonPage(s), "Hex Viewer": HexPage(s),
             "File Integrity": IntegrityPage(s), "Reports": ReportsPage(s), "Settings": SettingsPage(s)}
@@ -233,6 +229,8 @@ class MainWindow(QMainWindow):
 
     # ---------- navigazione ----------
     def go_to(self, name: str) -> None:
+        if name not in self.pages:          # pagina non più presente (es. collegamento di una versione precedente)
+            return
         it = self.items.get(name)
         if it is None:          # pagina non presente nel menu: si apre comunque
             if self.state.case is None and name not in ALWAYS:

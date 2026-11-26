@@ -243,7 +243,9 @@ def test_single_view_menu(simple_ui):
     lp.adv_btn.setChecked(True)                                     # opzioni tecniche a richiesta
     assert lp.adv.isVisibleTo(lp) and lp.only_img.isVisibleTo(lp) and lp.recursive.isVisibleTo(lp)
     dp = w.pages["Dashboard"]
-    assert not dp.fv.isVisibleTo(dp) and dp.activity_box.isVisibleTo(dp)
+    assert not dp.drawer.isVisibleTo(dp) and not dp.activity_box.isVisibleTo(dp)   # dettagli e registro a richiesta
+    dp.log_btn.setChecked(True)
+    assert dp.activity_box.isVisibleTo(dp)
 
 
 def test_all_pages_reachable_from_menu(simple_ui, tmp_path):
@@ -284,7 +286,7 @@ def test_program_icon(ui):
     assert not w.windowIcon().isNull()
 
 
-def test_dashboard_details_on_the_right(ui, dataset):
+def test_dashboard_table_with_details_on_click(ui, dataset):
     import shutil
     app, st, w = ui
     cp = w.pages["Case Management"]
@@ -299,18 +301,23 @@ def test_dashboard_details_on_the_right(ui, dataset):
     st.set_exhibit(ex.id)
     st.analysis_changed.emit()
     dp = w.pages["Dashboard"]
-    dp.set_simple(True)
     dp.refresh()
-    assert not dp.fv.isVisibleTo(dp)                              # elenco chiuso…
-    assert dp.fv.detail.isVisibleTo(dp)                           # …ma i dettagli sono a destra
-    assert dp.fv.detail.parent() is not dp.fv                     # non sotto la tabella
+    assert dp.tree.topLevelItemCount() == 1 and not dp.drawer.isVisibleTo(dp)   # tabella; dettagli chiusi
+    top = dp.tree.topLevelItem(0)
+    assert top.text(1) == ex.original_name and top.childCount() >= 1
     from fvp.core import explain
     first = explain.attention(st.last_analysis()["findings"])[0]
-    assert first.title in dp.fv.detail.toPlainText()             # primo punto da verificare già aperto
-    f = next(x for x in dp.fv.findings if x.level.value == "informativo")
-    dp.fv.select(f.id)
-    assert f.title in dp.fv.detail.toPlainText()
-
+    assert top.child(0).text(1) == first.title                    # prima il punto più importante
+    dp.tree.setCurrentItem(top.child(0))                           # clic sulla riga: i dettagli compaiono
+    assert dp.drawer.isVisibleTo(dp) and first.title in dp.detail.toPlainText()
+    assert "Cosa significa" in dp.detail.toPlainText()
+    dp.close_details()
+    assert not dp.drawer.isVisibleTo(dp)
+    f = next(x for x in st.last_analysis()["findings"] if x.level.value == "informativo")
+    dp.select_finding(f.id)                                        # passa da sé a «Tutti i controlli»
+    assert dp.every.isChecked() and f.title in dp.detail.toPlainText()
+    dp.tree.setCurrentItem(dp.tree.topLevelItem(0))                # clic sul file: sintesi del file
+    assert ex.original_name in dp.detail.toPlainText() and "Esito per area" in dp.detail.toPlainText()
 
 def test_pages_scroll_instead_of_overlapping(simple_ui, dataset, tmp_path):
     """Con la finestra piccola (portatile, Windows al 150%) le pagine scorrono: nessun widget viene compresso sotto

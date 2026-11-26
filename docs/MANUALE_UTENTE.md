@@ -7,11 +7,11 @@ Nel menu a sinistra, in alto, ci sono i passi da seguire in ordine:
 1. **Apri un caso**: scrivi il tuo nome, un numero e un titolo, poi *Crea caso* (oppure apri un caso esistente).
 2. **Aggiungi i file**: trascina foto, video o cartelle nel riquadro, lascia il tipo di analisi *Completa* e premi
    *Avvia l'analisi*.
-3. **Leggi i risultati**: in alto la sintesi in parole semplici, sotto ciò che merita attenzione. I colori indicano
+3. **Leggi i risultati**: una tabella con l'esito di ogni file; clicca una riga per i dettagli. I colori indicano
    dove guardare, non se un file è falso.
 4. **Crea il report**: il documento finale da consegnare.
 
-Sotto i passi, la sezione **Analisi** raccoglie le singole analisi (*Tutti i dati del file*, *Analisi visiva*,
+Sotto i passi, la sezione **Analisi** raccoglie le singole analisi (*Analisi visiva*,
 *Metadati*, *Fotocamera di origine*, *Persone nei video*…) e la sezione **Strumenti** *Confronta immagini*,
 *Byte del file (Hex)* e *Verifica hash*. In ogni pagina il pulsante **Come funziona** spiega metodo e limiti; le
 opzioni tecniche restano dietro pulsanti come *Scegli le singole analisi* o *Mostra tutti i controlli eseguiti*.
@@ -44,10 +44,17 @@ Il modulo **Confronto con gli altri reperti** abbina foto e filmato delle Live P
 
 ## Leggere i risultati
 
-La pagina **Riepilogo** è il punto di partenza. In alto c'è la sintesi del caso in parole semplici. Sotto ci sono il racconto del file selezionato (menu "File" in alto) e l'elenco di **ciò che merita attenzione**:
+La pagina **Riepilogo** è il punto di partenza. In alto ci sono quattro numeri (file analizzati, che richiedono
+attenzione, da approfondire, con contenuti nascosti) e lo stato delle impronte hash. Sotto c'è una **tabella**: ogni
+riga è un file, con il suo esito; aprendola compaiono i punti da verificare (oppure, con **Tutti i controlli**,
+l'elenco completo).
 
-- **Dettagli** apre, nell'elenco sottostante, la spiegazione completa: «Cosa significa», «Cosa fare» e i dati tecnici;
-- **Apri vista** porta alla sezione utile, ad esempio la mappa giusta in *Analisi visiva* o il testo estratto in *Contenuti nascosti*.
+- **Clic su un risultato**: a destra compare il riquadro dei dettagli con «Cosa significa», «Cosa fare», i dati
+  tecnici e il pulsante **Apri la vista collegata** (ad esempio la mappa giusta in *Analisi visiva* o il testo
+  estratto in *Contenuti nascosti*). La ✕ chiude il riquadro.
+- **Clic su un file**: il riquadro mostra la sintesi del file e l'esito per area; il file diventa anche quello attivo
+  nelle altre pagine.
+- **Registro del caso**, in fondo, mostra le ultime operazioni registrate.
 
 Esiti dei singoli controlli: **Fatto accertato** (oggettivo e ripetibile), **Anomalia**, **Da verificare** (compatibile con una modifica ma con spiegazioni anche normali), **Indicazione statistica** (una mappa o un calcolo da interpretare), **Non verificabile**, **Informazione**.
 
@@ -142,9 +149,6 @@ Sports2D lavora su una copia verificata del reperto; i suoi risultati compaiono 
 fonte "Sports2D originale". Senza statura indicata in Impostazioni non viene fatta alcuna conversione in metri.
 Pose2Sim viene usato tramite Sports2D (filtri, metri, OpenSim): la ricostruzione 3D di Pose2Sim richiede più telecamere
 calibrate e non si applica a un video singolo.
-
-La pagina **Tutti i dati rinvenuti** riporta ogni dato estratto dall'ultima analisi del reperto, anche quando non ci
-sono anomalie, con le anomalie in cima.
 
 ### Modello OpenSim (.osim)
 

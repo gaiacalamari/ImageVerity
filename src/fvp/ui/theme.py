@@ -113,7 +113,19 @@ QMainWindow, QStackedWidget > QWidget {{ background:{c['base']}; }}
 #Strict {{ color:{c['green']}; border:1px solid {c['green']}; border-radius:2px; padding:1px 6px; }}
 #StrictOff {{ color:{c['yellow']}; border:1px solid {c['yellow']}; border-radius:2px; padding:1px 6px; }}
 #Stat {{ background:{c['panel']}; border:1px solid {c['rule']}; border-radius:3px; }}
-#StatValue {{ font-size:20pt; font-weight:600; }}
+#StatValue {{ font-size:18pt; font-weight:600; }}
+#KpiBar {{ background:{c['panel']}; border:1px solid {c['rule']}; border-radius:3px; }}
+#KpiBar #Stat {{ background:transparent; border:none; border-right:1px solid {c['rule']}; border-radius:0; }}
+#KpiNote {{ padding:0 16px; color:{c['muted']}; }}
+QPushButton#Segment {{ border-radius:0; padding:5px 14px; background:{c['panel']}; }}
+QPushButton#Segment:checked {{ background:{c['accent']}; border-color:{c['accent']}; color:{c['accent_fg']}; }}
+QPushButton#IconButton {{ border:none; background:transparent; padding:2px 8px; color:{c['muted']}; }}
+QPushButton#IconButton:hover {{ background:{c['panel2']}; color:{c['text']}; }}
+#DetailSplit::handle {{ background:transparent; }}
+#Drawer {{ background:{c['panel']}; border:1px solid {c['rule']}; border-radius:3px; }}
+QTextBrowser#DetailBody {{ border:none; background:{c['panel']}; }}
+#ResultsTree::item {{ padding:5px 2px; }}
+#ResultsTree::item:selected {{ background:{c['select']}; color:{c['text']}; }}
 #NotImpl {{ background:{c['panel']}; border:1px dashed {c['rule_strong']}; border-radius:3px; padding:12px; color:{c['muted']}; }}
 QScrollArea#PageScroll, QWidget#PageViewport, QWidget#PageViewport > QWidget {{ background:{c['base']}; border:none; }}
 #HelpBox {{ background:{c['panel2']}; border:1px solid {c['rule']}; border-radius:3px; padding:10px 12px; }}
