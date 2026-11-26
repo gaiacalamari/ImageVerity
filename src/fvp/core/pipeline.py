@@ -386,7 +386,7 @@ def analyze_exhibit(case: Case, ex_id: str, operator: str, settings: Settings | 
             raise
         except sports2d_ext.Sports2DUnavailable as e:
             findings.append(Finding(Category.HUMAN_POSE, Level.INFO, "Sports2D / Pose2Sim originali non installati",
-                                    f"{e}. L'analisi del movimento di Veridica (modulo Persone e "
+                                    f"{e}. L'analisi del movimento di ImageVerity (modulo Persone e "
                                     "movimento) è indipendente e non ne risente.", "—", "sports2d",
                                     limitations="Per affiancare i programmi originali: python tools/install_sports2d.py "
                                                 "(vedi manuale, 'Sports2D e Pose2Sim originali').", confidence="n/a"))

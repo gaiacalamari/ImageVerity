@@ -42,6 +42,6 @@ a = Analysis([str(root / "src" / "fvp" / "__main__.py")], pathex=[str(root / "sr
                        "PySide6.QtCharts", "PySide6.QtDataVisualization", "PySide6.QtBluetooth", "PySide6.QtPositioning"],
              noarchive=False)
 pyz = PYZ(a.pure)
-exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name="Veridica", console=False,
+exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name="ImageVerity", console=False,
           icon=str(ICON))
-coll = COLLECT(exe, a.binaries, a.datas, name="Veridica")
+coll = COLLECT(exe, a.binaries, a.datas, name="ImageVerity")

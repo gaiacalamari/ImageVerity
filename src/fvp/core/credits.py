@@ -119,7 +119,7 @@ def notices_text() -> str:
 
 
 def text_summary() -> str:
-    lines = ["Veridica - crediti e licenze di terze parti", ""]
+    lines = ["ImageVerity - crediti e licenze di terze parti", ""]
     for kind, items in by_kind().items():
         lines.append(kind.upper())
         for c in items:

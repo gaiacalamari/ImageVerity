@@ -111,7 +111,7 @@ class SteganalysisPage(Page):
         # riferimenti
         w4 = QWidget()
         l4 = QVBoxLayout(w4)
-        ref = make_table(["Strumento citato da StegoIntelligence", "Tecnica", "In Veridica"])
+        ref = make_table(["Strumento citato da StegoIntelligence", "Tecnica", "In ImageVerity"])
         fill_table(ref, [list(t) for t in STEGO_TOOLS], sortable=False)
         ref.setWordWrap(True)
         l4.addWidget(ref, 1)

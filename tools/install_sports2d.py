@@ -1,10 +1,10 @@
 """Crea l'ambiente Python separato con Sports2D e Pose2Sim originali, usato dal modulo "sports2d".
 
 Uso (serve Internet e Python 3.11 o successivo a 64 bit):
-    py -3.12 tools\\install_sports2d.py                 # Windows, ambiente in <utente>\\Veridica\\sports2d-env
+    py -3.12 tools\\install_sports2d.py                 # Windows, ambiente in <utente>\\ImageVerity\\sports2d-env
     python3 tools/install_sports2d.py --target DIR      # cartella diversa (indicarla poi nelle Impostazioni)
 
-Veridica cerca l'ambiente in <home>/sports2d-env (la stessa cartella dei casi e delle impostazioni;
+ImageVerity cerca l'ambiente in <home>/sports2d-env (la stessa cartella dei casi e delle impostazioni;
 con la versione portable è data\\sports2d-env accanto all'eseguibile) oppure nel percorso indicato in Impostazioni.
 L'elenco esatto dei pacchetti installati è salvato in <ambiente>/pip-freeze.txt per la documentazione.
 Alla prima analisi RTMLib scarica i modelli di stima della posa da OpenMMLab; i loro SHA-256 vengono registrati
@@ -25,8 +25,10 @@ def default_target() -> Path:
     base = os.environ.get("FVP_HOME")
     if base:
         return Path(base) / "sports2d-env"
-    new, old = Path.home() / "Veridica", Path.home() / "ForensicVisionPro"
-    return (old if old.is_dir() and not new.exists() else new) / "sports2d-env"
+    home = Path.home() / "ImageVerity"
+    if not home.exists():                       # nomi precedenti del programma
+        home = next((Path.home() / n for n in ("Veridica", "ForensicVisionPro") if (Path.home() / n).is_dir()), home)
+    return home / "sports2d-env"
 
 
 def main() -> int:

@@ -91,9 +91,10 @@ class MainWindow(QMainWindow):
         bl = QHBoxLayout(brand)
         bl.setContentsMargins(16, 12, 16, 12)
         bl.setSpacing(10)
-        mark = QLabel(APP_NAME[:1].upper())          # monogramma: quadrato pieno, nessun arrotondamento
+        initials = "".join(ch for ch in APP_NAME if ch.isupper())[:2] or APP_NAME[:1].upper()
+        mark = QLabel(initials)                        # monogramma: quadrato pieno, nessun arrotondamento
         mark.setObjectName("BrandMark")
-        mark.setFixedSize(24, 24)
+        mark.setFixedSize(28, 24)
         mark.setAlignment(Qt.AlignmentFlag.AlignCenter)
         bl.addWidget(mark, 0, Qt.AlignmentFlag.AlignTop)
         names = QVBoxLayout()

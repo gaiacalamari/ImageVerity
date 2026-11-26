@@ -1,3 +1,3 @@
-"""Veridica - suite di analisi forense per immagini e video."""
+"""ImageVerity - suite di analisi forense per immagini e video."""
 __version__ = "1.5.1"
-APP_NAME = "Veridica"
+APP_NAME = "ImageVerity"

@@ -291,14 +291,14 @@ def test_all_data_page_shows_everything(ui, tmp_path, monkeypatch):
     pg.refresh()
     tops = [pg.tree.topLevelItem(i).text(0) for i in range(pg.tree.topLevelItemCount())]
     assert tops[0] == "Anomalie e punti di attenzione"
-    for t in ("Tutti i risultati dei moduli", "Integrità e acquisizione", "Persone e movimento (Veridica)",
+    for t in ("Tutti i risultati dei moduli", "Integrità e acquisizione", "Persone e movimento (ImageVerity)",
               "Formato del file", "Strumenti e versioni"):
         assert t in tops, tops
     assert pg.tree.topLevelItem(0).childCount() >= 1
     pg.search.setText("pose_overlay.mp4")
     visible = [pg.tree.topLevelItem(i).text(0) for i in range(pg.tree.topLevelItemCount())
                if not pg.tree.topLevelItem(i).isHidden()]
-    assert "Persone e movimento (Veridica)" in visible and "Integrità e acquisizione" not in visible
+    assert "Persone e movimento (ImageVerity)" in visible and "Integrità e acquisizione" not in visible
 
 
 def test_pose_page_opensim_source_and_button(ui, tmp_path, monkeypatch, fake_env):

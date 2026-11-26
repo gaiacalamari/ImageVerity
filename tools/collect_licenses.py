@@ -107,7 +107,7 @@ def collect(out: Path, bin_dir: Path | None = None, log=print) -> list[str]:
         for p in found:
             shutil.copy2(p, out / p.name)
         rows.append((c.name, "bin/", c.license, ", ".join([p.name for p in found] + list(c.license_files))))
-    idx = ["# Licenze dei componenti distribuiti con Veridica", "",
+    idx = ["# Licenze dei componenti distribuiti con ImageVerity", "",
            "Generato da tools/collect_licenses.py. Crediti completi e sorgenti dei componenti copyleft: "
            "THIRD_PARTY_NOTICES.md.", "", "| Componente | Versione | Licenza dichiarata | File |", "|---|---|---|---|"]
     idx += [f"| {a} | {b} | {c_} | {d} |" for a, b, c_, d in rows]

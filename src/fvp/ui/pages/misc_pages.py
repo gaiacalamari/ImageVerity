@@ -180,7 +180,7 @@ class SettingsPage(Page):
         self.root.addWidget(g3, 1)
         g4 = QGroupBox("Crediti e licenze")
         l4 = QHBoxLayout(g4)
-        info = QLabel("Veridica usa componenti di terze parti (Qt, Pillow, NumPy, OpenCV, pillow-heif, "
+        info = QLabel("ImageVerity usa componenti di terze parti (Qt, Pillow, NumPy, OpenCV, pillow-heif, "
                       "ONNX Runtime, ExifTool di Phil Harvey, FFmpeg) e metodologie di altri progetti (Sports2D, "
                       "StegoIntelligence). Autori, licenze e sorgenti sono elencati nei crediti.")
         info.setWordWrap(True)
@@ -195,11 +195,11 @@ class SettingsPage(Page):
         from ...core import selfcheck
         checks = self.state.selfcheck
         if not checks:
-            self.tools.setText(f"Veridica {__version__} · controllo in corso o non ancora eseguito.")
+            self.tools.setText(f"ImageVerity {__version__} · controllo in corso o non ancora eseguito.")
             self.checks.setRowCount(0)
             return
         ok, failed = selfcheck.summary(checks)
-        self.tools.setText(f"Veridica {__version__} · " + (
+        self.tools.setText(f"ImageVerity {__version__} · " + (
             span("green", "tutti i componenti essenziali sono operativi") if ok else
             span("red", f"{len(failed)} componenti essenziali non operativi", True)))
         fill_table(self.checks, [[c.name, c.level, "OK" if c.ok else "NON OPERATIVO", c.detail, c.version]

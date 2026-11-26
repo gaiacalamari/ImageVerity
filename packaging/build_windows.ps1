@@ -1,4 +1,4 @@
-# Veridica 1.4 - build completa e autonoma per Windows.
+# ImageVerity 1.4 - build completa e autonoma per Windows.
 # Avvio: doppio clic su build_windows.bat nella cartella principale del progetto.
 #
 # Verifica e, se manca, installa automaticamente tutto ciò che serve:
@@ -103,9 +103,13 @@ if ($LASTEXITCODE -ne 0) { Warn "modelli della posa non installati: Persone e mo
 
 # Sports2D e Pose2Sim originali in un ambiente separato (facoltativo; FVP_SKIP_SPORTS2D=1 per saltarlo)
 if ($env:FVP_SKIP_SPORTS2D -ne "1") {
-    # Cartella dati: <utente>\Veridica, oppure <utente>\ForensicVisionPro se esiste solo quella (installazioni precedenti)
-    $dataHome = "$env:USERPROFILE\Veridica"
-    if (-not (Test-Path $dataHome) -and (Test-Path "$env:USERPROFILE\ForensicVisionPro")) { $dataHome = "$env:USERPROFILE\ForensicVisionPro" }
+    # Cartella dati: <utente>\ImageVerity, oppure quella di un nome precedente se esiste solo quella
+    $dataHome = "$env:USERPROFILE\ImageVerity"
+    if (-not (Test-Path $dataHome)) {
+        foreach ($old in @("Veridica", "ForensicVisionPro")) {
+            if (Test-Path "$env:USERPROFILE\$old") { $dataHome = "$env:USERPROFILE\$old"; break }
+        }
+    }
     Write-Host "`nSports2D e Pose2Sim originali: ambiente separato in $dataHome\sports2d-env"
     & $py tools\install_sports2d.py --target "$dataHome\sports2d-env" | Out-Host
     if ($LASTEXITCODE -ne 0) { Warn "Sports2D non installato: il modulo dei programmi originali restera' non disponibile." }
@@ -129,11 +133,11 @@ Step "6/9 Eseguibile (PyInstaller)"
 # Licenze di tutti i componenti inclusi: la build si ferma se un componente di runtime non ne ha
 Run $vpy @("tools\collect_licenses.py", "build\third_party_licenses")
 Run $vpy @("-m", "PyInstaller", "packaging\fvp.spec", "--noconfirm", "--distpath", "dist", "--workpath", "build\pyi")
-$exe = "dist\Veridica\Veridica.exe"
+$exe = "dist\ImageVerity\ImageVerity.exe"
 if (-not (Test-Path $exe)) { Fail "PyInstaller non ha prodotto $exe" }
 # Note e licenze anche accanto all'eseguibile (visibili nella versione portable e nell'installazione)
-Copy-Item "THIRD_PARTY_NOTICES.md" "dist\Veridica\" -Force
-Copy-Item "build\third_party_licenses" "dist\Veridica\licenses" -Recurse -Force
+Copy-Item "THIRD_PARTY_NOTICES.md" "dist\ImageVerity\" -Force
+Copy-Item "build\third_party_licenses" "dist\ImageVerity\licenses" -Recurse -Force
 
 Step "7/9 Verifica dell'eseguibile finito (--selfcheck)"
 $report = Join-Path $Root "build\selfcheck-exe.json"
@@ -147,10 +151,10 @@ if (-not $r.ok -or $p.ExitCode -ne 0) { Fail "l'eseguibile finito non supera il 
 Remove-Item Env:\PYTHONPATH, Env:\FVP_HOME
 
 Step "8/9 Versione portable"
-$zip = "dist\Veridica-$Version-portable.zip"
-"" | Out-File -Encoding ascii "dist\Veridica\portable.flag"
-Compress-Archive -Path "dist\Veridica\*" -DestinationPath $zip -Force
-Remove-Item "dist\Veridica\portable.flag"
+$zip = "dist\ImageVerity-$Version-portable.zip"
+"" | Out-File -Encoding ascii "dist\ImageVerity\portable.flag"
+Compress-Archive -Path "dist\ImageVerity\*" -DestinationPath $zip -Force
+Remove-Item "dist\ImageVerity\portable.flag"
 
 Step "9/9 Installer (Inno Setup)"
 function Find-Iscc {
@@ -187,5 +191,5 @@ $out = Get-ChildItem dist -Recurse -Include *.exe, *.zip | Where-Object { $_.Ful
 $lines = $out | ForEach-Object { "{0}  {1}" -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower(), $_.FullName.Substring($Root.Length + 1) }
 $lines | Out-File -Encoding utf8 "dist\SHA256SUMS.txt"
 $lines | ForEach-Object { Write-Host $_ }
-Write-Host "`nBuild completata. Eseguibile: dist\Veridica\Veridica.exe" -ForegroundColor Green
+Write-Host "`nBuild completata. Eseguibile: dist\ImageVerity\ImageVerity.exe" -ForegroundColor Green
 Stop-Transcript | Out-Null

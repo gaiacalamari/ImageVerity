@@ -19,14 +19,18 @@ def default_home() -> Path:
     return home_dir(Path.home())
 
 
-LEGACY_DIR_NAME = "ForensicVisionPro"     # nome precedente: i casi già creati restano dove sono
-DIR_NAME = "Veridica"
+DIR_NAME = "ImageVerity"
+LEGACY_DIR_NAMES = ("Veridica", "ForensicVisionPro")    # nomi precedenti: i casi già creati restano dove sono
 
 
 def home_dir(base: Path) -> Path:
-    """<base>/Veridica; se esiste soltanto la cartella del nome precedente, continua a usare quella."""
-    new, old = base / DIR_NAME, base / LEGACY_DIR_NAME
-    return old if old.is_dir() and not new.exists() else new
+    """<base>/ImageVerity; se non esiste ma c'è la cartella di un nome precedente, continua a usare quella."""
+    new = base / DIR_NAME
+    if not new.exists():
+        for name in LEGACY_DIR_NAMES:
+            if (base / name).is_dir():
+                return base / name
+    return new
 
 
 @dataclass

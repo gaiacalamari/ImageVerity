@@ -1,6 +1,6 @@
-# Veridica
+# ImageVerity
 
-> Già **Forensic Vision Pro**. I casi e le impostazioni creati con il nome precedente restano in `<utente>/ForensicVisionPro` e vengono usati automaticamente finché non esiste `<utente>/Veridica`.
+> Già **Forensic Vision Pro**. I casi e le impostazioni creati con il nome precedente restano in `<utente>/ForensicVisionPro` e vengono usati automaticamente finché non esiste `<utente>/ImageVerity`.
 
 Suite desktop per l'analisi forense di immagini e video (e, in parte, audio): acquisizione con hash verificati e catena di custodia, struttura dei file, metadati (compresi quelli incorporati nelle tracce video), analisi temporale, storia di compressione JPEG, copy-move, filtro mediano, PRNU, steganalisi e StegoIntelligence, persone e movimento (video annotato, angoli e discontinuità con la metodologia Sports2D; Sports2D e Pose2Sim originali con modello OpenSim), confronto tra immagini, Hex Viewer e report.
 
@@ -10,9 +10,9 @@ Doppio clic su **`build_windows.bat`**. Serve solo una connessione a Internet: l
 
 Risultato in `dist\`:
 
-- `Veridica\Veridica.exe` — programma pronto all'uso, strumenti inclusi
-- `Veridica-1.5.0-portable.zip` — versione portable (casi e impostazioni accanto all'eseguibile)
-- `installer\Veridica-1.5.0-setup.exe` — installer
+- `ImageVerity\ImageVerity.exe` — programma pronto all'uso, strumenti inclusi
+- `ImageVerity-1.5.0-portable.zip` — versione portable (casi e impostazioni accanto all'eseguibile)
+- `installer\ImageVerity-1.5.0-setup.exe` — installer
 - `SHA256SUMS.txt` — hash dei file prodotti
 
 Il registro completo è in `build\build.log`; i controlli di sistema sono in `build\selfcheck-*.json`.
@@ -43,7 +43,7 @@ PYTHONPATH=src python -m pytest -q                 # test
 
 ## Crediti e licenze
 
-Veridica si basa su componenti di terze parti:
+ImageVerity si basa su componenti di terze parti:
 
 - **Qt for Python**: The Qt Company.
 - **Pillow**: Jeffrey A. Clark e collaboratori.
@@ -57,7 +57,7 @@ Veridica si basa su componenti di terze parti:
 
 Il programma si basa anche sulle metodologie di **Sports2D** e **Pose2Sim** di David Pagnon, su **rtmlib** di Tao Jiang e sul catalogo **StegoIntelligence** di CScorza.
 
-Autori, licenze, sorgenti dei componenti copyleft e obblighi di ridistribuzione sono in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md); i testi integrali delle licenze sono in [`licenses/`](licenses/). Dal programma: Impostazioni → Crediti e licenze, oppure `Veridica --credits crediti.txt`.
+Autori, licenze, sorgenti dei componenti copyleft e obblighi di ridistribuzione sono in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md); i testi integrali delle licenze sono in [`licenses/`](licenses/). Dal programma: Impostazioni → Crediti e licenze, oppure `ImageVerity --credits crediti.txt`.
 
 ## Documentazione
 

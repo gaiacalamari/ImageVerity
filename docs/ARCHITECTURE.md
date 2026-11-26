@@ -1,4 +1,4 @@
-# Veridica — Architettura
+# ImageVerity — Architettura
 
 ## Principi
 
@@ -108,12 +108,12 @@ Tabella `audit_log`: ogni voce contiene `prev_hash` e `entry_hash = SHA-256(seq,
 
 ## Controllo del sistema e build
 
-`core/selfcheck.py` verifica pacchetti Python, SIFT, classificatori Haar, ExifTool (lettura reale di un JPEG generato), FFprobe (lettura reale di un WAV generato), integrità dei binari inclusi rispetto a `bin/tools.lock.json` e scrivibilità delle cartelle di lavoro. Viene eseguito all'avvio dell'interfaccia, da Settings e dalla build, prima sui sorgenti e poi sull'eseguibile finito con `Veridica.exe --selfcheck report.json`. La build si interrompe se un componente essenziale non funziona.
+`core/selfcheck.py` verifica pacchetti Python, SIFT, classificatori Haar, ExifTool (lettura reale di un JPEG generato), FFprobe (lettura reale di un WAV generato), integrità dei binari inclusi rispetto a `bin/tools.lock.json` e scrivibilità delle cartelle di lavoro. Viene eseguito all'avvio dell'interfaccia, da Settings e dalla build, prima sui sorgenti e poi sull'eseguibile finito con `ImageVerity.exe --selfcheck report.json`. La build si interrompe se un componente essenziale non funziona.
 
 ## Struttura delle cartelle
 
 ```
-Veridica/
+ImageVerity/
 ├── src/fvp/
 │   ├── core/        findings.py, audit.py, pipeline.py, config.py, tools.py, tasks.py, selfcheck.py
 │   ├── engines/     hashing.py, signature.py, metadata.py, timestamps.py, image.py, video.py,
