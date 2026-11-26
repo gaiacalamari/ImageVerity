@@ -55,7 +55,7 @@ Forensic Vision Pro si basa su componenti di terze parti:
 
 Il programma si basa anche sulle metodologie di **Sports2D** e **Pose2Sim** di David Pagnon, su **rtmlib** di Tao Jiang e sul catalogo **StegoIntelligence** di CScorza.
 
-Autori, licenze, sorgenti dei componenti copyleft e obblighi di ridistribuzione sono in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md); i testi integrali delle licenze sono in [`licenses/`](licenses/). Dal programma: Impostazioni → Crediti e licenze, oppure `ForensicVisionPro --credits crediti.txt`.
+Autori, licenze, sorgenti dei componenti copyleft e obblighi di ridistribuzione sono in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md); i testi integrali delle licenze sono in [`licenses/`](licenses/). Dal programma: Impostazioni → Crediti e licenze.
 
 ## Documentazione
 
