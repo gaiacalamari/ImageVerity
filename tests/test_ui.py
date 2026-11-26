@@ -265,7 +265,7 @@ def test_all_pages_reachable_from_menu(simple_ui, tmp_path):
 # ------------------------------------------------------------------ icona e riepilogo
 
 def test_program_icon(ui):
-    """Icona del programma (foto con lente d'ingrandimento) in tutti i formati, usata da eseguibile, installer e
+    """Icona del programma (monogramma «IV») in tutti i formati, usata da eseguibile, installer e
     finestra; è quella prodotta da tools/make_icon.py."""
     from PIL import Image
 
