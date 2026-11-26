@@ -243,9 +243,8 @@ def test_single_view_menu(simple_ui):
     lp.adv_btn.setChecked(True)                                     # opzioni tecniche a richiesta
     assert lp.adv.isVisibleTo(lp) and lp.only_img.isVisibleTo(lp) and lp.recursive.isVisibleTo(lp)
     dp = w.pages["Dashboard"]
-    assert not dp.drawer.isVisibleTo(dp) and not dp.activity_box.isVisibleTo(dp)   # dettagli e registro a richiesta
-    dp.log_btn.setChecked(True)
-    assert dp.activity_box.isVisibleTo(dp)
+    assert dp.title == "Risultati" and w.items["Dashboard"].text().endswith("Risultati")
+    assert dp.stack.currentIndex() == 0                              # nessun caso: solo l'invito a scegliere
 
 
 def test_all_pages_reachable_from_menu(simple_ui, tmp_path):
@@ -302,22 +301,28 @@ def test_dashboard_table_with_details_on_click(ui, dataset):
     st.analysis_changed.emit()
     dp = w.pages["Dashboard"]
     dp.refresh()
-    assert dp.tree.topLevelItemCount() == 1 and not dp.drawer.isVisibleTo(dp)   # tabella; dettagli chiusi
-    top = dp.tree.topLevelItem(0)
-    assert top.text(1) == ex.original_name and top.childCount() >= 1
+    assert dp.files.topLevelItemCount() == 1                       # elenco dei file, una frase di esito
+    it = dp.files.topLevelItem(0)
     from fvp.core import explain
-    first = explain.attention(st.last_analysis()["findings"])[0]
-    assert top.child(0).text(1) == first.title                    # prima il punto più importante
-    dp.tree.setCurrentItem(top.child(0))                           # clic sulla riga: i dettagli compaiono
-    assert dp.drawer.isVisibleTo(dp) and first.title in dp.detail.toPlainText()
-    assert "Cosa significa" in dp.detail.toPlainText()
-    dp.close_details()
-    assert not dp.drawer.isVisibleTo(dp)
+    att = explain.attention(st.last_analysis()["findings"])
+    assert it.text(0) == ex.original_name and it.text(1).endswith("da controllare")
+    assert "hanno qualcosa da controllare" in dp.summary.text()
+    assert dp.stack.currentIndex() == 1                            # il file è già aperto a destra
+    text = dp.points.toPlainText()
+    assert att[0].title in text and explain.plain_explanation(att[0]) in text
+    dp.show_finding(att[0].id)                                     # clic su un punto: la sua scheda
+    assert dp.stack.currentIndex() == 2 and "Cosa significa" in dp.detail.toPlainText()
+    assert "Dati tecnici" not in dp.detail.toPlainText()          # dati tecnici a richiesta
+    dp.tech_btn.setChecked(True)
+    assert "Metodo" in dp.detail.toPlainText()
+    dp.back()
+    assert dp.stack.currentIndex() == 1
     f = next(x for x in st.last_analysis()["findings"] if x.level.value == "informativo")
-    dp.select_finding(f.id)                                        # passa da sé a «Tutti i controlli»
-    assert dp.every.isChecked() and f.title in dp.detail.toPlainText()
-    dp.tree.setCurrentItem(dp.tree.topLevelItem(0))                # clic sul file: sintesi del file
-    assert ex.original_name in dp.detail.toPlainText() and "Esito per area" in dp.detail.toPlainText()
+    assert f.title not in dp.points.toPlainText()
+    dp.show_all.setChecked(True)                                   # anche i controlli senza esito
+    assert f.title in dp.points.toPlainText()
+    dp.select_finding(f.id, ex.id)
+    assert f.title in dp.detail.toPlainText()
 
 def test_pages_scroll_instead_of_overlapping(simple_ui, dataset, tmp_path):
     """Con la finestra piccola (portatile, Windows al 150%) le pagine scorrono: nessun widget viene compresso sotto

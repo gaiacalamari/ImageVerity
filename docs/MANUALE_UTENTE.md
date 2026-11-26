@@ -7,12 +7,12 @@ Nel menu a sinistra, in alto, ci sono i passi da seguire in ordine:
 1. **Apri un caso**: scrivi il tuo nome, un numero e un titolo, poi *Crea caso* (oppure apri un caso esistente).
 2. **Aggiungi i file**: trascina foto, video o cartelle nel riquadro, lascia il tipo di analisi *Completa* e premi
    *Avvia l'analisi*.
-3. **Leggi i risultati**: una tabella con l'esito di ogni file; clicca una riga per i dettagli. I colori indicano
+3. **Risultati**: scegli un file e leggi cosa c'è da controllare, in parole semplici. I colori indicano
    dove guardare, non se un file è falso.
 4. **Crea il report**: il documento finale da consegnare.
 
 Sotto i passi, la sezione **Analisi** raccoglie le singole analisi (*Analisi visiva*,
-*Metadati*, *Fotocamera di origine*, *Persone nei video*…) e la sezione **Strumenti** *Confronta immagini*,
+*Metadati*, *Date e orari*, *Persone nei video*…) e la sezione **Strumenti** *Confronta immagini*,
 *Byte del file (Hex)* e *Verifica hash*. In ogni pagina il pulsante **Come funziona** spiega metodo e limiti; le
 opzioni tecniche restano dietro pulsanti come *Scegli le singole analisi* o *Mostra tutti i controlli eseguiti*.
 
@@ -44,17 +44,16 @@ Il modulo **Confronto con gli altri reperti** abbina foto e filmato delle Live P
 
 ## Leggere i risultati
 
-La pagina **Riepilogo** è il punto di partenza. In alto ci sono quattro numeri (file analizzati, che richiedono
-attenzione, da approfondire, con contenuti nascosti) e lo stato delle impronte hash. Sotto c'è una **tabella**: ogni
-riga è un file, con il suo esito; aprendola compaiono i punti da verificare (oppure, con **Tutti i controlli**,
-l'elenco completo).
+La pagina **Risultati** è il punto di partenza. In alto una frase dice quanti file hanno qualcosa da controllare e
+se i file sono rimasti integri durante l'analisi.
 
-- **Clic su un risultato**: a destra compare il riquadro dei dettagli con «Cosa significa», «Cosa fare», i dati
-  tecnici e il pulsante **Apri la vista collegata** (ad esempio la mappa giusta in *Analisi visiva* o il testo
-  estratto in *Contenuti nascosti*). La ✕ chiude il riquadro.
-- **Clic su un file**: il riquadro mostra la sintesi del file e l'esito per area; il file diventa anche quello attivo
-  nelle altre pagine.
-- **Registro del caso**, in fondo, mostra le ultime operazioni registrate.
+- **A sinistra**, l'elenco dei file, ciascuno con il suo esito: *Nessun problema trovato* (verde) oppure *N punti da
+  controllare* (giallo o rosso).
+- **A destra**, per il file scelto, i punti da controllare in ordine di importanza, ciascuno con una spiegazione in
+  parole semplici. Cliccandone uno si apre la sua scheda: *Cosa significa*, *Cosa fare* e il pulsante **Apri la
+  pagina per approfondire**; i dati tecnici sono dietro **Dati tecnici**. *‹ Tutti i punti di questo file* torna
+  all'elenco.
+- *Mostra anche i controlli che non hanno trovato nulla* aggiunge, in fondo, l'elenco completo dei controlli.
 
 Esiti dei singoli controlli: **Fatto accertato** (oggettivo e ripetibile), **Anomalia**, **Da verificare** (compatibile con una modifica ma con spiegazioni anche normali), **Indicazione statistica** (una mappa o un calcolo da interpretare), **Non verificabile**, **Informazione**.
 
@@ -89,7 +88,6 @@ Verde: i test eseguiti non hanno rilevato anomalie. Giallo: elementi da approfon
   - *Contenuti estratti*: testo, file o intestazioni trovati da StegoIntelligence nei bit meno significativi, con SHA-256, apribili nell'Hex Viewer.
   - *Esplora i bit (avanzato)*: test statistici per canale e ogni canale e bit come immagine, alla maniera di Stegsolve.
   - *Strumenti e tecniche*: cosa è coperto rispetto al catalogo StegoIntelligence.
-- **Fotocamera di origine**: crea un'impronta da almeno 5 immagini (meglio 20+) dello stesso dispositivo, alla stessa risoluzione e non ridimensionate; poi confronta il reperto. PCE oltre 60 indica compatibilità con il sensore, non un'attribuzione certa.
 - **Persone e movimento**: si attiva con il profilo *Persone e movimento (video)*, con la casella del modulo o con il
   pulsante *Analizza persone e movimento* della pagina. Non fa parte del profilo *Completa* perché sui video richiede
   molto calcolo (circa 3–10 frame al secondo su CPU; al massimo 3.600 frame per video, modificabile).

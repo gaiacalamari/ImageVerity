@@ -135,14 +135,14 @@ RULES: list[tuple[str, str, str, str, str | None]] = [
     (r"^CRC errato", "Una parte del file è stata alterata o si è danneggiata dopo il salvataggio.",
      "Verifica la fonte del file.", "Hex Viewer", None),
     (r"^Compatibile con il sensore", "Il rumore dell'immagine è compatibile con quello di una fotocamera di cui è "
-     "registrata l'impronta.", "Valuta il valore PCE e la qualità delle immagini di riferimento.", "PRNU / Sensore",
+     "registrata l'impronta.", "Valuta il valore PCE e la qualità delle immagini di riferimento.", "Image Forensics",
      "prnu_local"),
     (r"^Formato non riconosciuto", "Il programma non riconosce il tipo di file dai suoi primi byte.",
      "Esamina l'inizio del file con l'Hex Viewer.", "Hex Viewer", None),
     (r"^Durata audio e video diverse", "Audio e video hanno durate molto diverse, come può succedere dopo un montaggio.",
-     "Riproduci il file e controlla la sincronia.", "Video Forensics", None),
+     "Riproduci il file e controlla la sincronia.", "Metadata Analyzer", None),
     (r"^Encoder dichiarato", "Il file dichiara il programma usato per codificarlo o impacchettarlo.",
-     "Valuta se è coerente con la provenienza dichiarata.", "Video Forensics", None),
+     "Valuta se è coerente con la provenienza dichiarata.", "Metadata Analyzer", None),
     (r"^Discontinuità del movimento", "In alcuni punti del video le persone 'saltano' da una posizione all'altra, "
      "cambiano dimensione o vengono sostituite da un frame al successivo, come se mancasse un pezzo di ripresa o ne "
      "fosse stato inserito uno diverso.", "Apri la pagina Persone e movimento e guarda i fotogrammi prima e dopo "

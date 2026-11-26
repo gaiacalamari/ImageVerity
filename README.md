@@ -23,7 +23,7 @@ Il menu a sinistra si apre con quattro passi:
 
 1. **Apri un caso**: nome dell'operatore, numero e titolo del caso.
 2. **Aggiungi i file**: trascina foto, video o cartelle e premi *Avvia l'analisi*.
-3. **Leggi i risultati**: tabella con l'esito di ogni file e dettagli a comparsa.
+3. **Risultati**: per ogni file, cosa c'è da controllare spiegato in parole semplici.
 4. **Crea il report**: HTML, JSON o CSV.
 
 Sotto i passi, le sezioni *Analisi* e *Strumenti* (Confronta immagini, Hex, Verifica hash) danno accesso diretto a ogni pagina. *Come funziona*, in ogni pagina, spiega metodo e limiti.

@@ -122,6 +122,15 @@ QPushButton#Segment:checked {{ background:{c['accent']}; border-color:{c['accent
 QPushButton#IconButton {{ border:none; background:transparent; padding:2px 8px; color:{c['muted']}; }}
 QPushButton#IconButton:hover {{ background:{c['panel2']}; color:{c['text']}; }}
 #DetailSplit::handle {{ background:transparent; }}
+#ResultSummary {{ background:{c['panel']}; border:1px solid {c['rule']}; border-radius:3px; padding:12px 16px; font-size:11pt; }}
+#FileList {{ border-radius:3px; }}
+#Drawer QStackedWidget > QWidget, #Drawer QLabel {{ background:{c['panel']}; }}
+#FileTitle {{ font-size:15pt; font-weight:600; }}
+#FileList::item {{ padding:8px 4px; }}
+#FileList::item:selected {{ background:{c['select']}; color:{c['text']}; }}
+QTextBrowser#Points {{ border:none; background:{c['panel']}; }}
+QPushButton#LinkButton {{ border:none; background:transparent; padding:2px 0; color:{c['muted']}; }}
+QPushButton#LinkButton:hover {{ color:{c['text']}; }}
 #Drawer {{ background:{c['panel']}; border:1px solid {c['rule']}; border-radius:3px; }}
 QTextBrowser#DetailBody {{ border:none; background:{c['panel']}; }}
 #ResultsTree::item {{ padding:5px 2px; }}
