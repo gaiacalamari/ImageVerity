@@ -157,6 +157,7 @@ QScrollBar::add-line, QScrollBar::sub-line {{ width:0; height:0; }}
 QScrollBar::add-page, QScrollBar::sub-page {{ background:transparent; }}
 QToolTip {{ background:{c['panel']}; color:{c['text']}; border:1px solid {c['rule_strong']}; padding:4px 6px; }}
 QStatusBar {{ background:{c['sidebar']}; border-top:1px solid {c['rule']}; color:{c['muted']}; }}
+QStatusBar QLabel {{ padding:2px 10px; color:{c['muted']}; }}
 QCheckBox::indicator {{ width:14px; height:14px; }}
 """
 
