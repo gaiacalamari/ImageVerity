@@ -1,4 +1,4 @@
-# Forensic Vision Pro 
+# Forensic Image Verity 
 
 Suite desktop per l'analisi forense di immagini e video (e, in parte, audio): acquisizione con hash verificati e catena di custodia, struttura dei file, metadati (compresi quelli incorporati nelle tracce video), analisi temporale, storia di compressione JPEG, copy-move, filtro mediano, PRNU, steganalisi e StegoIntelligence, persone e movimento (video annotato, angoli e discontinuità con la metodologia Sports2D; Sports2D e Pose2Sim originali con modello OpenSim), confronto tra immagini, Hex Viewer e report.
 
