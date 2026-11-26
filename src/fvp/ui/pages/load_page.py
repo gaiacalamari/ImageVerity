@@ -144,13 +144,13 @@ class LoadPage(Page):
 
     # ---------- vista ----------
     def apply_mode(self) -> None:
-        for w in (self.recursive, self.only_img, self.label, self.again):
-            w.setVisible(not self.simple)
-        self.adv_btn.setChecked(not self.simple)
-        self._toggle_adv(not self.simple)
+        self.adv_btn.setChecked(False)
+        self._toggle_adv(False)
 
     def _toggle_adv(self, on: bool) -> None:
-        self.adv.setVisible(on)
+        """Opzioni di acquisizione e singole analisi: nascoste finché non servono."""
+        for w in (self.recursive, self.only_img, self.label, self.again, self.adv):
+            w.setVisible(on)
         self.adv_btn.setText("Nascondi le singole analisi ▾" if on else "Scegli le singole analisi ▸")
 
     # ---------- elenco ----------

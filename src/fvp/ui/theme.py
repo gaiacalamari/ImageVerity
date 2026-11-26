@@ -118,7 +118,6 @@ QMainWindow, QStackedWidget > QWidget {{ background:{c['base']}; }}
 QScrollArea#PageScroll, QWidget#PageViewport, QWidget#PageViewport > QWidget {{ background:{c['base']}; border:none; }}
 #HelpBox {{ background:{c['panel2']}; border:1px solid {c['rule']}; border-radius:3px; padding:10px 12px; }}
 #HelpButton {{ padding:4px 10px; }}
-#ModeButton {{ padding:4px 12px; font-weight:600; }}
 #Lead {{ font-size:11pt; }}
 #BigDrop {{ border:1px dashed {c['rule_strong']}; border-radius:3px; padding:28px; font-size:12pt; color:{c['text']}; background:{c['panel']}; }}
 #Notice {{ background:{c['panel']}; border:1px solid {c['rule']}; border-radius:3px; padding:10px 12px; }}

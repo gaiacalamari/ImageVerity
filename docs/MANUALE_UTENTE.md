@@ -2,7 +2,7 @@
 
 ## In breve: i quattro passi
 
-Il programma si apre nella **vista semplice**. Nel menu a sinistra ci sono i passi da seguire in ordine:
+Nel menu a sinistra, in alto, ci sono i passi da seguire in ordine:
 
 1. **Apri un caso**: scrivi il tuo nome, un numero e un titolo, poi *Crea caso* (oppure apri un caso esistente).
 2. **Aggiungi i file**: trascina foto, video o cartelle nel riquadro, lascia il tipo di analisi *Completa* e premi
@@ -11,9 +11,10 @@ Il programma si apre nella **vista semplice**. Nel menu a sinistra ci sono i pas
    dove guardare, non se un file è falso.
 4. **Crea il report**: il documento finale da consegnare.
 
-*Tutti i dati del file* mostra ogni informazione estratta; *Persone nei video* il video con lo scheletro, gli angoli
-e il modello 3D. In ogni pagina il pulsante **Come funziona** spiega metodo e limiti. Per tutte le analisi e gli
-strumenti tecnici: **Passa alla vista esperta**, in alto a destra.
+Sotto i passi, la sezione **Analisi** raccoglie le singole analisi (*Tutti i dati del file*, *Analisi visiva*,
+*Metadati*, *Fotocamera di origine*, *Persone nei video*…) e la sezione **Strumenti** *Confronta immagini*,
+*Byte del file (Hex)* e *Verifica hash*. In ogni pagina il pulsante **Come funziona** spiega metodo e limiti; le
+opzioni tecniche restano dietro pulsanti come *Scegli le singole analisi* o *Mostra tutti i controlli eseguiti*.
 
 ## Primo avvio
 

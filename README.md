@@ -19,14 +19,14 @@ Il registro completo è in `build\build.log`; i controlli di sistema sono in `bu
 
 ## Uso
 
-Il programma si apre nella vista semplice, con quattro passi nel menu:
+Il menu a sinistra si apre con quattro passi:
 
 1. **Apri un caso**: nome dell'operatore, numero e titolo del caso.
 2. **Aggiungi i file**: trascina foto, video o cartelle e premi *Avvia l'analisi*.
 3. **Leggi i risultati**: sintesi in parole semplici e ciò che merita attenzione.
 4. **Crea il report**: HTML, JSON o CSV.
 
-*Come funziona*, in ogni pagina, spiega metodo e limiti; *Passa alla vista esperta* mostra tutte le analisi e gli strumenti.
+Sotto i passi, le sezioni *Analisi* e *Strumenti* (Confronta immagini, Hex, Verifica hash) danno accesso diretto a ogni pagina. *Come funziona*, in ogni pagina, spiega metodo e limiti.
 
 Dettagli in `docs/MANUALE_UTENTE.md`.
 

@@ -93,9 +93,9 @@ class DashboardPage(Page):
         state.analysis_changed.connect(self.refresh)
 
     def apply_mode(self) -> None:
-        self.activity_box.setVisible(not self.simple)
-        self.all_btn.setChecked(not self.simple)
-        self._toggle_all(not self.simple)
+        self.activity_box.setVisible(True)           # registro delle attività: parte della catena di custodia
+        self.all_btn.setChecked(False)
+        self._toggle_all(False)
         self.refresh()
 
     def _toggle_all(self, on: bool) -> None:

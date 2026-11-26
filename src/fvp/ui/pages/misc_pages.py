@@ -83,8 +83,7 @@ class SettingsPage(Page):
         for data, txt in (("Basic", "solo quelli da verificare"), ("Advanced", "tutti"), ("Expert", "tutti (esperto)")):
             self.mode.addItem(txt, data)
         self.mode.setCurrentIndex(max(0, self.mode.findData(s.ui_mode)))
-        self.mode.setToolTip("Quali risultati mostrare negli elenchi dei controlli. La vista semplice o esperta "
-                             "dell'intero programma si cambia con il pulsante in alto a destra.")
+        self.mode.setToolTip("Quali risultati mostrare negli elenchi dei controlli.")
         f.addRow("Risultati negli elenchi", self.mode)
         self.theme = QComboBox()
         self.theme.addItem("Chiaro", "light")
