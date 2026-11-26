@@ -9,8 +9,8 @@ Doppio clic su **`build_windows.bat`**. Serve solo una connessione a Internet: l
 Risultato in `dist\`:
 
 - `ImageVerity\ImageVerity.exe` — programma pronto all'uso, strumenti inclusi
-- `ImageVerity-1.5.0-portable.zip` — versione portable (casi e impostazioni accanto all'eseguibile)
-- `installer\ImageVerity-1.5.0-setup.exe` — installer
+- `ImageVerity-1.5.1-portable.zip` — versione portable (casi e impostazioni accanto all'eseguibile)
+- `installer\ImageVerity-1.5.1-setup.exe` — installer
 - `SHA256SUMS.txt` — hash dei file prodotti
 
 Il registro completo è in `build\build.log`; i controlli di sistema sono in `build\selfcheck-*.json`.
